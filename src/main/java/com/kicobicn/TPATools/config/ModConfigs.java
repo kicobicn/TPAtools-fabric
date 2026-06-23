@@ -17,42 +17,81 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
-import java.util.function.IntSupplier;
-import java.util.function.LongSupplier;
-import java.util.function.BooleanSupplier;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class ModConfigs {
     private static final Logger LOGGER = LogManager.getLogger("TPAtools");
 
-    // 配置项定义 - 使用Supplier模式适配Fabric
-    public static final IntSupplier COOLDOWN_SECONDS = () -> 60; // 默认60秒
-    public static final IntSupplier WAIT_SECONDS = () -> 30; // 默认30秒
-    public static final BooleanSupplier DEBUG_MODE = () -> false; // 默认关闭
-    public static final IntSupplier MAX_HOMES = () -> 2; // 默认2个家
-    public static final IntSupplier HOME_INVITE_COOLDOWN = () -> 0; // 默认0秒
-    public static final IntSupplier HOME_INVITE_TIMEOUT = () -> 30; // 默认30秒
-    public static final BooleanSupplier ALLOW_TELEPORT_RIDE_ENTITY = () -> false; // 默认关闭
-    public static final Supplier<String> DATABASE_TYPE = () -> "json"; // 默认使用JSON
-    public static final Supplier<String> MYSQL_HOST = () -> "localhost"; // 默认主机
-    public static final IntSupplier MYSQL_PORT = () -> 3306; // 默认端口
-    public static final Supplier<String> MYSQL_DATABASE = () -> "tpatools"; // 默认数据库名
-    public static final Supplier<String> MYSQL_USERNAME = () -> "root"; // 默认用户名
-    public static final Supplier<String> MYSQL_PASSWORD = () -> ""; // 默认密码(空)
-    public static final IntSupplier RTP_SCOPE = () -> 100000; // 默认100000范围
-    public static final IntSupplier RTP_COOLDOWN_TIME = () -> 30; // 默认30秒
-    public static final IntSupplier RTP_MAX_ATTEMPTS = () -> 50; // 默认50次尝试
-    public static final IntSupplier RTP_MIN_Y = () -> -64; // 默认最小Y
-    public static final IntSupplier RTP_MAX_Y = () -> 320; // 默认最大Y
-    public static final IntSupplier MAX_WARP_COUNT = () -> 3; // 默认3个地标
-    public static final LongSupplier COOLDOWN_TIME = () -> 3 * 1000L; // 默认3秒(毫秒)
-    public static final IntSupplier TIMEOUT_TICKS = () -> 30 * 20; // 默认30秒(以ticks计)
-    public static final Supplier<String> DEFAULT_LANGUAGE = () -> "zh_cn"; // 默认语言
+    // ==================== 配置字段（可变 + 持久化） ====================
+    private static final Gson CONFIG_GSON = new GsonBuilder().setPrettyPrinting().create();
+
+    private static int cooldownSeconds = 60;
+    private static int waitSeconds = 30;
+    private static boolean debugMode = false;
+    private static int maxHomes = 2;
+    private static int homeInviteCooldown = 0;
+    private static int homeInviteTimeout = 30;
+    private static boolean allowTeleportRideEntity = false;
+    private static String databaseType = "json";
+    private static String mysqlHost = "localhost";
+    private static int mysqlPort = 3306;
+    private static String mysqlDatabase = "tpatools";
+    private static String mysqlUsername = "root";
+    private static String mysqlPassword = "";
+    private static int rtpScope = 100000;
+    private static int rtpCooldownTime = 30;
+    private static int rtpMaxAttempts = 50;
+    private static int rtpMinY = -64;
+    private static int rtpMaxY = 320;
+    private static int maxWarpCount = 3;
+    private static long cooldownTime = 3 * 1000L;
+    private static int timeoutTicks = 30 * 20;
+    private static String defaultLanguage = "zh_cn";
+
+    // ==================== Getters ====================
+    public static int getWaitSeconds() { return waitSeconds; }
+    public static int getMaxHomes() { return maxHomes; }
+    public static int getHomeInviteCooldown() { return homeInviteCooldown; }
+    public static int getHomeInviteTimeout() { return homeInviteTimeout; }
+    public static boolean isAllowTeleportRideEntity() { return allowTeleportRideEntity; }
+    public static String getDatabaseType() { return databaseType; }
+    public static String getMysqlHost() { return mysqlHost; }
+    public static int getMysqlPort() { return mysqlPort; }
+    public static String getMysqlDatabase() { return mysqlDatabase; }
+    public static String getMysqlUsername() { return mysqlUsername; }
+    public static String getMysqlPassword() { return mysqlPassword; }
+    public static int getRtpScope() { return rtpScope; }
+    public static int getRtpCooldownTime() { return rtpCooldownTime; }
+    public static int getRtpMaxAttempts() { return rtpMaxAttempts; }
+    public static int getRtpMinY() { return rtpMinY; }
+    public static int getRtpMaxY() { return rtpMaxY; }
+    public static int getMaxWarpCount() { return maxWarpCount; }
+    public static long getCooldownTime() { return cooldownTime; }
+    public static int getTimeoutTicks() { return timeoutTicks; }
+    public static String getDefaultLanguage() { return defaultLanguage; }
+    public static boolean isDebugEnabled() { return debugMode; }
+
+    // ==================== Setters ====================
+    public static void setWaitSeconds(int v) { waitSeconds = v; saveConfigValues(); }
+    public static void setDebugMode(boolean v) { debugMode = v; saveConfigValues(); }
+    public static void setMaxHomes(int v) { maxHomes = v; saveConfigValues(); }
+    public static void setHomeInviteCooldown(int v) { homeInviteCooldown = v; saveConfigValues(); }
+    public static void setHomeInviteTimeout(int v) { homeInviteTimeout = v; saveConfigValues(); }
+    public static void setAllowTeleportRideEntity(boolean v) { allowTeleportRideEntity = v; saveConfigValues(); }
+    public static void setRtpScope(int v) { rtpScope = v; saveConfigValues(); }
+    public static void setRtpCooldownTime(int v) { rtpCooldownTime = v; saveConfigValues(); }
+    public static void setMaxWarpCount(int v) { maxWarpCount = v; saveConfigValues(); }
+    public static void setCooldownTime(long v) { cooldownTime = v; saveConfigValues(); }
+    public static void setDefaultLanguage(String v) { defaultLanguage = v; saveConfigValues(); }
 
     // 服务器实例
     private static MinecraftServer server;
@@ -130,9 +169,102 @@ public class ModConfigs {
         return builder.buildFuture();
     };
 
-    //调试模式
-    public static boolean isDebugEnabled() {
-        return DEBUG_MODE.getAsBoolean();
+    // ==================== 配置持久化 ====================
+    private static Path getConfigFile() {
+        return getConfigDir().resolve("config.json");
+    }
+
+    public static void loadConfigValues() {
+        Path configFile = getConfigFile();
+        if (!Files.exists(configFile)) {
+            DebugLog.info("Config file not found, using defaults");
+            return;
+        }
+        try (Reader reader = Files.newBufferedReader(configFile)) {
+            ConfigData data = CONFIG_GSON.fromJson(reader, ConfigData.class);
+            if (data == null) return;
+            if (data.cooldownSeconds != null) cooldownSeconds = data.cooldownSeconds;
+            if (data.waitSeconds != null) waitSeconds = data.waitSeconds;
+            if (data.debugMode != null) debugMode = data.debugMode;
+            if (data.maxHomes != null) maxHomes = data.maxHomes;
+            if (data.homeInviteCooldown != null) homeInviteCooldown = data.homeInviteCooldown;
+            if (data.homeInviteTimeout != null) homeInviteTimeout = data.homeInviteTimeout;
+            if (data.allowTeleportRideEntity != null) allowTeleportRideEntity = data.allowTeleportRideEntity;
+            if (data.databaseType != null) databaseType = data.databaseType;
+            if (data.mysqlHost != null) mysqlHost = data.mysqlHost;
+            if (data.mysqlPort != null) mysqlPort = data.mysqlPort;
+            if (data.mysqlDatabase != null) mysqlDatabase = data.mysqlDatabase;
+            if (data.mysqlUsername != null) mysqlUsername = data.mysqlUsername;
+            if (data.mysqlPassword != null) mysqlPassword = data.mysqlPassword;
+            if (data.rtpScope != null) rtpScope = data.rtpScope;
+            if (data.rtpCooldownTime != null) rtpCooldownTime = data.rtpCooldownTime;
+            if (data.rtpMaxAttempts != null) rtpMaxAttempts = data.rtpMaxAttempts;
+            if (data.rtpMinY != null) rtpMinY = data.rtpMinY;
+            if (data.rtpMaxY != null) rtpMaxY = data.rtpMaxY;
+            if (data.maxWarpCount != null) maxWarpCount = data.maxWarpCount;
+            if (data.cooldownTime != null) cooldownTime = data.cooldownTime;
+            if (data.timeoutTicks != null) timeoutTicks = data.timeoutTicks;
+            if (data.defaultLanguage != null) defaultLanguage = data.defaultLanguage;
+            DebugLog.info("Config loaded from {}", configFile);
+        } catch (Exception e) {
+            LOGGER.error("Failed to load config: {}", e.getMessage());
+        }
+    }
+
+    public static void saveConfigValues() {
+        ConfigData data = new ConfigData();
+        data.cooldownSeconds = cooldownSeconds;
+        data.waitSeconds = waitSeconds;
+        data.debugMode = debugMode;
+        data.maxHomes = maxHomes;
+        data.homeInviteCooldown = homeInviteCooldown;
+        data.homeInviteTimeout = homeInviteTimeout;
+        data.allowTeleportRideEntity = allowTeleportRideEntity;
+        data.databaseType = databaseType;
+        data.mysqlHost = mysqlHost;
+        data.mysqlPort = mysqlPort;
+        data.mysqlDatabase = mysqlDatabase;
+        data.mysqlUsername = mysqlUsername;
+        data.mysqlPassword = mysqlPassword;
+        data.rtpScope = rtpScope;
+        data.rtpCooldownTime = rtpCooldownTime;
+        data.rtpMaxAttempts = rtpMaxAttempts;
+        data.rtpMinY = rtpMinY;
+        data.rtpMaxY = rtpMaxY;
+        data.maxWarpCount = maxWarpCount;
+        data.cooldownTime = cooldownTime;
+        data.timeoutTicks = timeoutTicks;
+        data.defaultLanguage = defaultLanguage;
+        try (Writer writer = Files.newBufferedWriter(getConfigFile())) {
+            CONFIG_GSON.toJson(data, writer);
+        } catch (Exception e) {
+            LOGGER.error("Failed to save config: {}", e.getMessage());
+        }
+    }
+
+    private static class ConfigData {
+        Integer cooldownSeconds;
+        Integer waitSeconds;
+        Boolean debugMode;
+        Integer maxHomes;
+        Integer homeInviteCooldown;
+        Integer homeInviteTimeout;
+        Boolean allowTeleportRideEntity;
+        String databaseType;
+        String mysqlHost;
+        Integer mysqlPort;
+        String mysqlDatabase;
+        String mysqlUsername;
+        String mysqlPassword;
+        Integer rtpScope;
+        Integer rtpCooldownTime;
+        Integer rtpMaxAttempts;
+        Integer rtpMinY;
+        Integer rtpMaxY;
+        Integer maxWarpCount;
+        Long cooldownTime;
+        Integer timeoutTicks;
+        String defaultLanguage;
     }
 
     public static class DebugLog {
@@ -198,7 +330,7 @@ public class ModConfigs {
                                                 .executes(context -> {
                                                     String lang = StringArgumentType.getString(context, "lang");
                                                     if (lang.equals("en_us") || lang.equals("zh_cn") || lang.equals("fr_fr") || lang.equals("pt_br") || lang.equals("es_es") || lang.equals("zh_cn_cute")) {
-                                                        // 在Fabric中，我们使用supplier模式，这里只是更新配置
+                                                        setDefaultLanguage(lang);
                                                         ModUtils.loadTranslations(lang);
                                                         context.getSource().sendSuccess(
                                                                 () -> ModUtils.translateWithFallback("command.tpatool.setlanguage.success", "Language set to %s.", lang),
@@ -221,7 +353,7 @@ public class ModConfigs {
                                         .then(Commands.argument("count", IntegerArgumentType.integer(1))
                                                 .executes(context -> {
                                                     int count = IntegerArgumentType.getInteger(context, "count");
-                                                    // 在Fabric中，我们使用supplier模式，这里只是临时更新
+                                                    setMaxHomes(count);
                                                     context.getSource().sendSuccess(
                                                             () -> ModUtils.translateWithFallback("command.tpatool.setmaxhome.success", "Maximum homes set to %s.", count),
                                                             true
@@ -272,6 +404,7 @@ public class ModConfigs {
                                                 .suggests(TIME_SUGGESTIONS)
                                                 .executes(context -> {
                                                     int time = IntegerArgumentType.getInteger(context, "time");
+                                                    setCooldownTime(time * 1000L);
                                                     context.getSource().sendSuccess(
                                                             () -> ModUtils.translateWithFallback(
                                                                     "command.tpatool.tpacdtime.success",
@@ -294,7 +427,7 @@ public class ModConfigs {
                                                 .suggests(TIME_SUGGESTIONS)
                                                 .executes(context -> {
                                                     int time = IntegerArgumentType.getInteger(context, "time");
-                                                    // 在Fabric中，我们使用supplier模式，这里只是临时更新
+                                                    setWaitSeconds(time);
                                                     context.getSource().sendSuccess(
                                                             () -> ModUtils.translateWithFallback(
                                                                     "command.tpatool.tpawaittime.success",
@@ -318,7 +451,7 @@ public class ModConfigs {
                                                 .suggests(TIME_SUGGESTIONS)
                                                 .executes(context -> {
                                                     int time = IntegerArgumentType.getInteger(context, "time");
-                                                    // 在Fabric中，我们使用supplier模式，这里只是临时更新
+                                                    setHomeInviteTimeout(time);
                                                     context.getSource().sendSuccess(
                                                             () -> ModUtils.translateWithFallback(
                                                                     "command.tpatool.home.inviteovertime.success",
@@ -341,7 +474,7 @@ public class ModConfigs {
                                                 .suggests(TIME_SUGGESTIONS)
                                                 .executes(context -> {
                                                     int time = IntegerArgumentType.getInteger(context, "time");
-                                                    // 在Fabric中，我们使用supplier模式，这里只是临时更新
+                                                    setHomeInviteCooldown(time);
                                                     context.getSource().sendSuccess(
                                                             () -> ModUtils.translateWithFallback(
                                                                     "command.tpatool.home.invitecdtime.success",
@@ -365,7 +498,7 @@ public class ModConfigs {
                                                 .executes(context -> {
                                                     String enableStr = StringArgumentType.getString(context, "enable");
                                                     boolean enable = enableStr.equalsIgnoreCase("true");
-                                                    // 在Fabric中，我们使用supplier模式，这里只是临时更新
+                                                    setAllowTeleportRideEntity(enable);
                                                     context.getSource().sendSuccess(
                                                             () -> ModUtils.translateWithFallback(
                                                                     enable ? "command.tpatool.config.allowteleportrideentity.enabled" : "command.tpatool.config.allowteleportrideentity.disabled",
@@ -386,7 +519,7 @@ public class ModConfigs {
                                                 .suggests(TIME_SUGGESTIONS)
                                                 .executes(context -> {
                                                     int time = IntegerArgumentType.getInteger(context, "time");
-                                                    // 在Fabric中，我们使用supplier模式，这里只是临时更新
+                                                    setRtpCooldownTime(time);
                                                     context.getSource().sendSuccess(
                                                             () -> ModUtils.translateWithFallback(
                                                                     "command.tpatool.config.rtp.cooldown.success",
@@ -409,7 +542,7 @@ public class ModConfigs {
                                                 .suggests(RTP_SCOPE_SUGGESTIONS)
                                                 .executes(context -> {
                                                     int scope = IntegerArgumentType.getInteger(context, "scope");
-                                                    // 在Fabric中，我们使用supplier模式，这里只是临时更新
+                                                    setRtpScope(scope);
                                                     context.getSource().sendSuccess(
                                                             () -> ModUtils.translateWithFallback(
                                                                     "command.tpatool.config.rtp.scope.success",
@@ -432,7 +565,7 @@ public class ModConfigs {
                                                 .suggests(MAX_WARP_COUNT_SUGGESTIONS)
                                                 .executes(context -> {
                                                     int count = IntegerArgumentType.getInteger(context, "count");
-                                                    // 在Fabric中，我们使用supplier模式，这里只是临时更新
+                                                    setMaxWarpCount(count);
                                                     context.getSource().sendSuccess(
                                                             () -> ModUtils.translateWithFallback(
                                                                     "command.tpatool.config.maxwarpcount.success",
@@ -458,6 +591,7 @@ public class ModConfigs {
                                     .executes(context -> {
                                         String enableStr = StringArgumentType.getString(context, "enable");
                                         boolean enable = enableStr.equalsIgnoreCase("true");
+                                        setDebugMode(enable);
                                         context.getSource().sendSuccess(
                                             () -> ModUtils.translateWithFallback(
                                                     enable ? "command.tpatool.debug.enabled" : "command.tpatool.debug.disabled",

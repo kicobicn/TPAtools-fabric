@@ -20,7 +20,6 @@ import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -34,7 +33,7 @@ public class ModUtils {
     public static void registerEvents() {
         // 注册服务器生命周期事件
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
-            loadTranslations(ModConfigs.DEFAULT_LANGUAGE.get());
+            loadTranslations(ModConfigs.getDefaultLanguage());
             HomeHandler.loadHomes();
             GraveHandler.loadGraves();
             TPAHandler.loadToggleStates();
@@ -140,7 +139,7 @@ public class ModUtils {
      * 传送玩家及其骑乘的所有实体
      */
     public static void teleportWithRideChain(Entity player, ServerLevel targetLevel, double x, double y, double z, float yRot, float xRot) {
-        if (!ModConfigs.ALLOW_TELEPORT_RIDE_ENTITY.getAsBoolean()) {
+        if (!ModConfigs.isAllowTeleportRideEntity()) {
             // 如果配置禁用骑乘传送，只传送玩家
             if (player instanceof ServerPlayer serverPlayer) {
                 serverPlayer.teleportTo(targetLevel, x, y, z, yRot, xRot);
@@ -240,7 +239,7 @@ public class ModUtils {
             Iterator<TPAHandler.TPARequest> iterator = entry.getValue().iterator();
             while (iterator.hasNext()) {
                 TPAHandler.TPARequest request = iterator.next();
-                if (System.currentTimeMillis() - request.timestamp >= ModConfigs.TIMEOUT_TICKS.getAsInt() * 50) {
+                if (System.currentTimeMillis() - request.timestamp >= ModConfigs.getTimeoutTicks() * 50) {
                     request.target.sendSystemMessage(translateWithFallback(
                             request.isTPHere ? "command.tpatool.tpahere.timeout" : "command.tpatool.tpa.timeout",
                             "Teleport request from %s has timed out.", request.sender.getName()

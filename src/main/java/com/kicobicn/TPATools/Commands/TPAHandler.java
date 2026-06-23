@@ -387,7 +387,7 @@ public class TPAHandler {
 
         Long lastRequest = cooldowns.get(sender.getUUID());
         long currentTime = System.currentTimeMillis();
-        long cooldownMs = ModConfigs.COOLDOWN_TIME.getAsLong();
+        long cooldownMs = ModConfigs.getCooldownTime();
 
         if (lastRequest != null && currentTime - lastRequest < cooldownMs) {
             long remainingSeconds = (cooldownMs - (currentTime - lastRequest)) / 1000;

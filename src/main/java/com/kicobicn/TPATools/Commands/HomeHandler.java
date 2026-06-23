@@ -624,9 +624,9 @@ public class HomeHandler {
 
     private static int setHome(ServerPlayer player, String homeName) {
         Map<String, Home> homes = playerHomes.computeIfAbsent(player.getUUID(), k -> new HashMap<>());
-        if (homes.size() >= ModConfigs.MAX_HOMES.getAsInt()) {
+        if (homes.size() >= ModConfigs.getMaxHomes()) {
             player.sendSystemMessage(ModUtils.translateWithFallback(
-                    "command.tpatool.home.limit_exceeded", "You have reached the maximum number of homes (%s)!", ModConfigs.MAX_HOMES.getAsInt()
+                    "command.tpatool.home.limit_exceeded", "You have reached the maximum number of homes (%s)!", ModConfigs.getMaxHomes()
             ));
             return 0;
         }
@@ -972,7 +972,7 @@ public class HomeHandler {
         String cooldownKey = sender.getUUID() + ":" + target.getUUID();
         long currentTime = System.currentTimeMillis();
         long lastInviteTime = inviteCooldowns.getOrDefault(cooldownKey, 0L);
-        long cooldownMs = ModConfigs.HOME_INVITE_COOLDOWN.getAsInt() * 1000L;
+        long cooldownMs = ModConfigs.getHomeInviteCooldown() * 1000L;
 
         if (currentTime - lastInviteTime < cooldownMs) {
             source.sendFailure(ModUtils.translateWithFallback("command.tpatool.home.invite.cooldown", "Please wait before sending another invite!"));
@@ -1038,7 +1038,7 @@ public class HomeHandler {
         target.sendSystemMessage(targetMsg);
 
         // 设置超时
-        long timeoutMs = ModConfigs.HOME_INVITE_TIMEOUT.getAsInt() * 1000L;
+        long timeoutMs = ModConfigs.getHomeInviteTimeout() * 1000L;
         scheduler.schedule(() -> {
             UUID targetUUID = target.getUUID();
             List<InviteRequest> invites = pendingInvites.get(targetUUID);

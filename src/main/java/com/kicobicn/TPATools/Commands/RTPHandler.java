@@ -79,7 +79,7 @@ public class RTPHandler {
                     ModUtils.translateWithFallback(
                             "command.tpatool.rtp.failed", 
                             "Failed to find a safe location after %d attempts. Please try again.", 
-                            ModConfigs.RTP_MAX_ATTEMPTS.getAsInt()
+                            ModConfigs.getRtpMaxAttempts()
                     )
             );
             return 0;
@@ -110,10 +110,10 @@ public class RTPHandler {
      * 寻找安全位置
      */
     private static BlockPos findSafeLocation(ServerLevel world, int centerX, int centerZ) {
-        int scope = ModConfigs.RTP_SCOPE.getAsInt();
-        int maxAttempts = ModConfigs.RTP_MAX_ATTEMPTS.getAsInt();
-        int minY = ModConfigs.RTP_MIN_Y.getAsInt();
-        int maxY = ModConfigs.RTP_MAX_Y.getAsInt();
+        int scope = ModConfigs.getRtpScope();
+        int maxAttempts = ModConfigs.getRtpMaxAttempts();
+        int minY = ModConfigs.getRtpMinY();
+        int maxY = ModConfigs.getRtpMaxY();
         
         for (int attempt = 0; attempt < maxAttempts; attempt++) {
             // 在范围内随机选择位置
@@ -147,7 +147,7 @@ public class RTPHandler {
     private static boolean isSafePosition(ServerLevel world, BlockPos pos, BlockState blockState, 
                                          BlockState blockBelow, BlockState blockAbove) {
         // 检查是否在有效Y范围内
-        if (pos.getY() < ModConfigs.RTP_MIN_Y.getAsInt() || pos.getY() > ModConfigs.RTP_MAX_Y.getAsInt()) {
+        if (pos.getY() < ModConfigs.getRtpMinY() || pos.getY() > ModConfigs.getRtpMaxY()) {
             return false;
         }
         
@@ -188,7 +188,7 @@ public class RTPHandler {
         }
         
         long lastUsed = rtpCooldowns.get(playerUUID);
-        long cooldownTime = ModConfigs.RTP_COOLDOWN_TIME.getAsInt() * 1000L; // 转换为毫秒
+        long cooldownTime = ModConfigs.getRtpCooldownTime() * 1000L;
         return System.currentTimeMillis() - lastUsed < cooldownTime;
     }
 
@@ -201,7 +201,7 @@ public class RTPHandler {
         }
         
         long lastUsed = rtpCooldowns.get(playerUUID);
-        long cooldownTime = ModConfigs.RTP_COOLDOWN_TIME.getAsInt() * 1000L;
+        long cooldownTime = ModConfigs.getRtpCooldownTime() * 1000L;
         long elapsed = System.currentTimeMillis() - lastUsed;
         long remaining = cooldownTime - elapsed;
         

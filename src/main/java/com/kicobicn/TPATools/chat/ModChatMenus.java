@@ -538,7 +538,7 @@ public class ModChatMenus {
                     .append(ModUtils.translateWithFallback("menu.tpatools.config.branch.setlanguage", "- Set Language (setlanguage)\n")
                             .withStyle(ChatFormatting.WHITE));
 
-            ChatFormatting langColor = "zh_cn".equals(ModConfigs.DEFAULT_LANGUAGE.get()) ?
+            ChatFormatting langColor = "zh_cn".equals(ModConfigs.getDefaultLanguage()) ?
                     ChatFormatting.GREEN : ChatFormatting.GRAY;
             menu.append(createI18nButton("menu.tpatools.config.button.setlanguage_1",
                             "menu.tpatools.config.hover.setlanguage",
@@ -547,7 +547,7 @@ public class ModChatMenus {
                             true))
                     .append(Component.literal(" "));
 
-            langColor = "en_us".equals(ModConfigs.DEFAULT_LANGUAGE.get()) ?
+            langColor = "en_us".equals(ModConfigs.getDefaultLanguage()) ?
                     ChatFormatting.GREEN : ChatFormatting.GRAY;
             menu.append(createI18nButton("menu.tpatools.config.button.setlanguage_2",
                             "menu.tpatools.config.hover.setlanguage",
@@ -556,7 +556,7 @@ public class ModChatMenus {
                             true))
                     .append(Component.literal(" "));
 
-            langColor = "fr_fr".equals(ModConfigs.DEFAULT_LANGUAGE.get()) ?
+            langColor = "fr_fr".equals(ModConfigs.getDefaultLanguage()) ?
                     ChatFormatting.GREEN : ChatFormatting.GRAY;
             menu.append(createI18nButton("menu.tpatools.config.button.setlanguage_3",
                             "menu.tpatools.config.hover.setlanguage",
@@ -565,7 +565,7 @@ public class ModChatMenus {
                             true))
                     .append(Component.literal(" "));
 
-            langColor = "es_es".equals(ModConfigs.DEFAULT_LANGUAGE.get()) ?
+            langColor = "es_es".equals(ModConfigs.getDefaultLanguage()) ?
                     ChatFormatting.GREEN : ChatFormatting.GRAY;
             menu.append(createI18nButton("menu.tpatools.config.button.setlanguage_4",
                             "menu.tpatools.config.hover.setlanguage",
@@ -574,7 +574,7 @@ public class ModChatMenus {
                             true))
                     .append(Component.literal(" "));
 
-            langColor = "pt_br".equals(ModConfigs.DEFAULT_LANGUAGE.get()) ?
+            langColor = "pt_br".equals(ModConfigs.getDefaultLanguage()) ?
                     ChatFormatting.GREEN : ChatFormatting.GRAY;
             menu.append(createI18nButton("menu.tpatools.config.button.setlanguage_5",
                             "menu.tpatools.config.hover.setlanguage",
@@ -583,7 +583,7 @@ public class ModChatMenus {
                             true))
                     .append(Component.literal(" "));
 
-            langColor = "zh_cn_cute".equals(ModConfigs.DEFAULT_LANGUAGE.get()) ?
+            langColor = "zh_cn_cute".equals(ModConfigs.getDefaultLanguage()) ?
                     ChatFormatting.GREEN : ChatFormatting.GRAY;
             menu.append(createI18nButton("menu.tpatools.config.button.setlanguage_6",
                             "menu.tpatools.config.hover.setlanguage",
@@ -595,7 +595,7 @@ public class ModChatMenus {
             menu.append(ModUtils.translateWithFallback("menu.tpatools.config.branch.setmaxhome", "- Set Maximum Number of Homes (setmaxhome)\n")
                     .withStyle(ChatFormatting.WHITE));
 
-            int maxHomes = ModConfigs.MAX_HOMES.getAsInt();
+            int maxHomes = ModConfigs.getMaxHomes();
             ChatFormatting color2 = maxHomes == 2 ? ChatFormatting.GREEN : ChatFormatting.GRAY;
             menu.append(createI18nButton("menu.tpatools.config.button.setmaxhome_2",
                             "menu.tpatools.config.hover.setmaxhome",
@@ -669,7 +669,7 @@ public class ModChatMenus {
             menu.append(ModUtils.translateWithFallback("menu.tpatools.config.branch.tpawaittime", "- TPA Timeout Duration (tpawaittime)\n")
                     .withStyle(ChatFormatting.WHITE));
 
-            int waitTime = ModConfigs.WAIT_SECONDS.getAsInt();
+            int waitTime = ModConfigs.getWaitSeconds();
             ChatFormatting waitColor = waitTime == 30 ? ChatFormatting.GREEN : ChatFormatting.GRAY;
             menu.append(createI18nButton("menu.tpatools.config.button.tpawaittime_30",
                             "menu.tpatools.home.hover.tpawaittime",
@@ -696,7 +696,7 @@ public class ModChatMenus {
             menu.append(ModUtils.translateWithFallback("menu.tpatools.config.branch.tpacdtime", "- TPA Cooldown Duration (tpacdtime)\n")
                     .withStyle(ChatFormatting.WHITE));
 
-            int cdTime = (int) (ModConfigs.COOLDOWN_TIME.getAsLong() / 1000);
+            int cdTime = (int) (ModConfigs.getCooldownTime() / 1000);
             ChatFormatting cdColor = cdTime == 0 ? ChatFormatting.GREEN : ChatFormatting.GRAY;
             menu.append(createI18nButton("menu.tpatools.config.button.tpacdtime_0",
                             "menu.tpatools.home.hover.tpacdtime",
@@ -731,7 +731,7 @@ public class ModChatMenus {
             menu.append(ModUtils.translateWithFallback("menu.tpatools.config.branch.homeinvitecdtime", "- Home Invite Cooldown Duration (homeinvitecdtime)\n")
                     .withStyle(ChatFormatting.WHITE));
 
-            int homeInviteCDTime = ModConfigs.HOME_INVITE_COOLDOWN.getAsInt();
+            int homeInviteCDTime = ModConfigs.getHomeInviteCooldown();
             ChatFormatting homeCDColor = homeInviteCDTime == 0 ? ChatFormatting.GREEN : ChatFormatting.GRAY;
             menu.append(createI18nButton("menu.tpatools.config.button.homeinvitecdtime_0",
                             "menu.tpatools.config.hover.homeinvitecdtime",
@@ -766,7 +766,7 @@ public class ModChatMenus {
             menu.append(ModUtils.translateWithFallback("menu.tpatools.config.branch.homeinviteovertime", "- Home Invite Timeout Duration (homeinviteovertime)\n")
                     .withStyle(ChatFormatting.WHITE));
 
-            int homeInviteOverTime = ModConfigs.HOME_INVITE_TIMEOUT.getAsInt();
+            int homeInviteOverTime = ModConfigs.getHomeInviteTimeout();
             ChatFormatting homeOTColor = homeInviteOverTime == 30 ? ChatFormatting.GREEN : ChatFormatting.GRAY;
             menu.append(createI18nButton("menu.tpatools.config.button.homeinviteovertime_30",
                             "menu.tpatools.config.hover.homeinviteovertime",
@@ -799,7 +799,7 @@ public class ModChatMenus {
                     .append(Component.literal("\n"));
 
             // 骑乘实体传送设置
-            boolean allowRideTeleport = ModConfigs.ALLOW_TELEPORT_RIDE_ENTITY.getAsBoolean();
+            boolean allowRideTeleport = ModConfigs.isAllowTeleportRideEntity();
             ChatFormatting rideColor = allowRideTeleport ? ChatFormatting.GREEN : ChatFormatting.GRAY;
             menu.append(createI18nButton("menu.tpatools.config.branch.allowteleportrideentity",
                             "menu.tpatools.config.hover.allowteleportrideentity",
@@ -816,7 +816,7 @@ public class ModChatMenus {
             menu.append(ModUtils.translateWithFallback("menu.tpatools.config.branch.rtpscope", "- RTP Scope (rtpscope)\n")
                     .withStyle(ChatFormatting.WHITE));
 
-            int rtpScope = ModConfigs.RTP_SCOPE.getAsInt();
+            int rtpScope = ModConfigs.getRtpScope();
             ChatFormatting rtpScopeColor = rtpScope == 10000 ? ChatFormatting.GREEN : ChatFormatting.GRAY;
             menu.append(createI18nButton("menu.tpatools.config.button.rtpscope_10000",
                             "menu.tpatools.config.hover.rtpscope",
@@ -855,7 +855,7 @@ public class ModChatMenus {
             menu.append(ModUtils.translateWithFallback("menu.tpatools.config.branch.rtpcdtime", "- RTP Cooldown Time (rtpcdtime)\n")
                     .withStyle(ChatFormatting.WHITE));
 
-            int rtpcdtime = ModConfigs.RTP_COOLDOWN_TIME.getAsInt();
+            int rtpcdtime = ModConfigs.getRtpCooldownTime();
             ChatFormatting rtpcdtimeColor = rtpcdtime == 30 ? ChatFormatting.GREEN : ChatFormatting.GRAY;
             menu.append(createI18nButton("menu.tpatools.config.button.rtpcdtime_30",
                             "menu.tpatools.config.hover.rtpcdtime",
@@ -886,7 +886,7 @@ public class ModChatMenus {
 
             menu.append(ModUtils.translateWithFallback("menu.tpatools.config.branch.setmaxwarpcount", "- Max Warp Count set (setmaxwarpcount)\n")
                     .withStyle(ChatFormatting.WHITE));
-            int maxwarpcount = ModConfigs.MAX_WARP_COUNT.getAsInt();
+            int maxwarpcount = ModConfigs.getMaxWarpCount();
             ChatFormatting maxwarpcountColor = maxwarpcount == 1 ? ChatFormatting.GREEN : ChatFormatting.GRAY;
             menu.append(createI18nButton("menu.tpatools.config.button.setmaxwarpcount_1",
                             "menu.tpatools.config.hover.setmaxwarpcount",
@@ -955,7 +955,7 @@ public class ModChatMenus {
                             .withStyle(ChatFormatting.GOLD))
                     .append(ModUtils.translateWithFallback("menu.tpatools.config.tips.setlanguage", "This setting is used to modify the hot-reload language feature of the TPATools mod.\n")
                             .withStyle(ChatFormatting.WHITE))
-                    .append(ModUtils.translateWithFallback("menu.tpatools.config.default.setlanguage", "- Default value: zh_cn (currently {})", ModConfigs.DEFAULT_LANGUAGE.get())
+                    .append(ModUtils.translateWithFallback("menu.tpatools.config.default.setlanguage", "- Default value: zh_cn (currently {})", ModConfigs.getDefaultLanguage())
                             .withStyle(ChatFormatting.GRAY));
 
             // 按钮
@@ -963,37 +963,37 @@ public class ModChatMenus {
                     .append(createI18nButton("menu.tpatools.config.button.setlanguage_1",
                             "menu.tpatools.config.hover.setlanguage",
                             "/tpatools configs setlanguage zh_cn",
-                            "zh_cn".equals(ModConfigs.DEFAULT_LANGUAGE.get()) ? ChatFormatting.GREEN : ChatFormatting.GRAY,
+                            "zh_cn".equals(ModConfigs.getDefaultLanguage()) ? ChatFormatting.GREEN : ChatFormatting.GRAY,
                             true))
                     .append(Component.literal(" "))
                     .append(createI18nButton("menu.tpatools.config.button.setlanguage_2",
                             "menu.tpatools.config.hover.setlanguage",
                             "/tpatools configs setlanguage en_us",
-                            "en_us".equals(ModConfigs.DEFAULT_LANGUAGE.get()) ? ChatFormatting.GREEN : ChatFormatting.GRAY,
+                            "en_us".equals(ModConfigs.getDefaultLanguage()) ? ChatFormatting.GREEN : ChatFormatting.GRAY,
                             true))
                     .append(Component.literal(" "))
                     .append(createI18nButton("menu.tpatools.config.button.setlanguage_3",
                             "menu.tpatools.config.hover.setlanguage",
                             "/tpatools configs setlanguage fr_fr",
-                            "fr_fr".equals(ModConfigs.DEFAULT_LANGUAGE.get()) ? ChatFormatting.GREEN : ChatFormatting.GRAY,
+                            "fr_fr".equals(ModConfigs.getDefaultLanguage()) ? ChatFormatting.GREEN : ChatFormatting.GRAY,
                             true))
                     .append(Component.literal(" "))
                     .append(createI18nButton("menu.tpatools.config.button.setlanguage_4",
                             "menu.tpatools.config.hover.setlanguage",
                             "/tpatools configs setlanguage pt_br",
-                            "pt_br".equals(ModConfigs.DEFAULT_LANGUAGE.get()) ? ChatFormatting.GREEN : ChatFormatting.GRAY,
+                            "pt_br".equals(ModConfigs.getDefaultLanguage()) ? ChatFormatting.GREEN : ChatFormatting.GRAY,
                             true))
                     .append(Component.literal(" "))
                     .append(createI18nButton("menu.tpatools.config.button.setlanguage_5",
                             "menu.tpatools.config.hover.setlanguage",
                             "/tpatools configs setlanguage es_es",
-                            "es_es".equals(ModConfigs.DEFAULT_LANGUAGE.get()) ? ChatFormatting.GREEN : ChatFormatting.GRAY,
+                            "es_es".equals(ModConfigs.getDefaultLanguage()) ? ChatFormatting.GREEN : ChatFormatting.GRAY,
                             true))
                     .append(Component.literal(" "))
                     .append(createI18nButton("menu.tpatools.config.button.setlanguage_6",
                             "menu.tpatools.config.hover.setlanguage",
                             "/tpatools configs setlanguage zh_cn_cute",
-                            "zh_cn_cute".equals(ModConfigs.DEFAULT_LANGUAGE.get()) ? ChatFormatting.GREEN : ChatFormatting.GRAY,
+                            "zh_cn_cute".equals(ModConfigs.getDefaultLanguage()) ? ChatFormatting.GREEN : ChatFormatting.GRAY,
                             true));
 
             // 分割线
@@ -1011,7 +1011,7 @@ public class ModChatMenus {
                             .withStyle(ChatFormatting.GOLD))
                     .append(ModUtils.translateWithFallback("menu.tpatools.config.tips.setmaxhome", "This setting controls the maximum number of homes allowed for all players on the server.\n")
                             .withStyle(ChatFormatting.WHITE))
-                    .append(ModUtils.translateWithFallback("menu.tpatools.config.default.setmaxhome", "- Default: 2 (currently: {})", ModConfigs.MAX_HOMES.getAsInt())
+                    .append(ModUtils.translateWithFallback("menu.tpatools.config.default.setmaxhome", "- Default: 2 (currently: {})", ModConfigs.getMaxHomes())
                             .withStyle(ChatFormatting.GRAY));
 
             // 按钮
@@ -1019,19 +1019,19 @@ public class ModChatMenus {
                     .append(createI18nButton("menu.tpatools.config.button.setmaxhome_2",
                             "menu.tpatools.config.hover.setmaxhome",
                             "/tpatools configs setmaxhome 2",
-                            2 == ModConfigs.MAX_HOMES.getAsInt() ? ChatFormatting.GREEN : ChatFormatting.GRAY,
+                            2 == ModConfigs.getMaxHomes() ? ChatFormatting.GREEN : ChatFormatting.GRAY,
                             true))
                     .append(Component.literal(" "))
                     .append(createI18nButton("menu.tpatools.config.button.setmaxhome_3",
                             "menu.tpatools.config.hover.setmaxhome",
                             "/tpatools configs setmaxhome 3",
-                            3 == ModConfigs.MAX_HOMES.getAsInt() ? ChatFormatting.GREEN : ChatFormatting.GRAY,
+                            3 == ModConfigs.getMaxHomes() ? ChatFormatting.GREEN : ChatFormatting.GRAY,
                             true))
                     .append(Component.literal(" "))
                     .append(createI18nButton("menu.tpatools.config.button.setmaxhome_5",
                             "menu.tpatools.config.hover.setmaxhome",
                             "/tpatools configs setmaxhome 5",
-                            5 == ModConfigs.MAX_HOMES.getAsInt() ? ChatFormatting.GREEN : ChatFormatting.GRAY,
+                            5 == ModConfigs.getMaxHomes() ? ChatFormatting.GREEN : ChatFormatting.GRAY,
                             true))
                     .append(Component.literal(" "))
                     .append(createI18nButton("menu.tpatools.config.button.setmaxhome",
@@ -1103,7 +1103,7 @@ public class ModChatMenus {
                             .withStyle(ChatFormatting.GOLD))
                     .append(ModUtils.translateWithFallback("menu.tpatools.config.tips.tpawaittime", "Sets the timeout duration for TPA requests.\n")
                             .withStyle(ChatFormatting.WHITE))
-                    .append(ModUtils.translateWithFallback("menu.tpatools.config.default.tpawaittime", "- Default: 30 (unit: seconds) (currently set to {} seconds)", ModConfigs.WAIT_SECONDS.getAsInt())
+                    .append(ModUtils.translateWithFallback("menu.tpatools.config.default.tpawaittime", "- Default: 30 (unit: seconds) (currently set to {} seconds)", ModConfigs.getWaitSeconds())
                             .withStyle(ChatFormatting.GRAY));
 
             // 按钮
@@ -1111,13 +1111,13 @@ public class ModChatMenus {
                     .append(createI18nButton("menu.tpatools.config.button.tpawaittime_30",
                             "menu.tpatools.config.hover.tpawaittime",
                             "/tpatools configs tpawaittime 30",
-                            30 == ModConfigs.WAIT_SECONDS.getAsInt() ? ChatFormatting.GREEN : ChatFormatting.GRAY,
+                            30 == ModConfigs.getWaitSeconds() ? ChatFormatting.GREEN : ChatFormatting.GRAY,
                             true))
                     .append(Component.literal(" "))
                     .append(createI18nButton("menu.tpatools.config.button.tpawaittime_60",
                             "menu.tpatools.config.hover.tpawaittime",
                             "/tpatools configs tpawaittime 60",
-                            60 == ModConfigs.WAIT_SECONDS.getAsInt() ? ChatFormatting.GREEN : ChatFormatting.GRAY,
+                            60 == ModConfigs.getWaitSeconds() ? ChatFormatting.GREEN : ChatFormatting.GRAY,
                             true))
                     .append(Component.literal(" "))
                     .append(createI18nButton("menu.tpatools.config.button.tpawaittime",
@@ -1141,7 +1141,7 @@ public class ModChatMenus {
                             .withStyle(ChatFormatting.GOLD))
                     .append(ModUtils.translateWithFallback("menu.tpatools.config.tips.tpacdtime", "Sets the cooldown duration between TPA requests.\n")
                             .withStyle(ChatFormatting.WHITE))
-                    .append(ModUtils.translateWithFallback("menu.tpatools.config.default.tpacdtime", "- Default: 0 (unit: seconds) (currently set to {} seconds)", (ModConfigs.COOLDOWN_TIME.getAsLong() / 1000)))
+                    .append(ModUtils.translateWithFallback("menu.tpatools.config.default.tpacdtime", "- Default: 0 (unit: seconds) (currently set to {} seconds)", (ModConfigs.getCooldownTime() / 1000)))
                     .withStyle(ChatFormatting.GRAY);
 
             // 按钮
@@ -1149,19 +1149,19 @@ public class ModChatMenus {
                     .append(createI18nButton("menu.tpatools.config.button.tpacdtime_0",
                             "menu.tpatools.config.hover.tpacdtime",
                             "/tpatools configs tpacdtime 0",
-                            0 == (ModConfigs.COOLDOWN_TIME.getAsLong() / 1000) ? ChatFormatting.GREEN : ChatFormatting.GRAY,
+                            0 == (ModConfigs.getCooldownTime() / 1000) ? ChatFormatting.GREEN : ChatFormatting.GRAY,
                             true))
                     .append(Component.literal(" "))
                     .append(createI18nButton("menu.tpatools.config.button.tpacdtime_10",
                             "menu.tpatools.config.hover.tpacdtime",
                             "/tpatools configs tpacdtime 10",
-                            10 == (ModConfigs.COOLDOWN_TIME.getAsLong() / 1000) ? ChatFormatting.GREEN : ChatFormatting.GRAY,
+                            10 == (ModConfigs.getCooldownTime() / 1000) ? ChatFormatting.GREEN : ChatFormatting.GRAY,
                             true))
                     .append(Component.literal(" "))
                     .append(createI18nButton("menu.tpatools.config.button.tpacdtime_30",
                             "menu.tpatools.config.hover.tpacdtime",
                             "/tpatools configs tpacdtime 30",
-                            30 == (ModConfigs.COOLDOWN_TIME.getAsLong() / 1000) ? ChatFormatting.GREEN : ChatFormatting.GRAY,
+                            30 == (ModConfigs.getCooldownTime() / 1000) ? ChatFormatting.GREEN : ChatFormatting.GRAY,
                             true))
                     .append(Component.literal(" "))
                     .append(createI18nButton("menu.tpatools.config.button.tpacdtime",
@@ -1217,7 +1217,7 @@ public class ModChatMenus {
             menu.append(Component.literal("====== TPATools - setting/allowteleportrideentity ======\n")
                     .withStyle(ChatFormatting.GOLD));
             // 骑乘实体传送设置
-            boolean allowRideTeleport = ModConfigs.ALLOW_TELEPORT_RIDE_ENTITY.getAsBoolean();
+            boolean allowRideTeleport = ModConfigs.isAllowTeleportRideEntity();
             ChatFormatting rideColor = allowRideTeleport ? ChatFormatting.GREEN : ChatFormatting.RED;
             menu.append(ModUtils.translateWithFallback("menu.tpatools.config.tips.allowteleportrideentity",
                                     "This setting controls whether to teleport ridden entities with players when using /tpa.\n")
@@ -1276,11 +1276,11 @@ public class ModChatMenus {
                             .withStyle(ChatFormatting.GOLD))
                     .append(ModUtils.translateWithFallback("menu.tpatools.config.tips.homeinvitecdtime", "Sets the cooldown duration between home invite requests.\n")
                             .withStyle(ChatFormatting.WHITE))
-                    .append(ModUtils.translateWithFallback("menu.tpatools.config.default.homeinvitecdtime", "- Default: 0 (unit: seconds) (currently set to {} seconds)", ModConfigs.HOME_INVITE_COOLDOWN.getAsInt())
+                    .append(ModUtils.translateWithFallback("menu.tpatools.config.default.homeinvitecdtime", "- Default: 0 (unit: seconds) (currently set to {} seconds)", ModConfigs.getHomeInviteCooldown())
                             .withStyle(ChatFormatting.GRAY));
 
             // 按钮
-            int homeInviteCDTime = ModConfigs.HOME_INVITE_COOLDOWN.getAsInt();
+            int homeInviteCDTime = ModConfigs.getHomeInviteCooldown();
             menu.append(Component.literal(" "))
                     .append(createI18nButton("menu.tpatools.config.button.homeinvitecdtime_0",
                             "menu.tpatools.config.hover.homeinvitecdtime",
@@ -1321,11 +1321,11 @@ public class ModChatMenus {
                             .withStyle(ChatFormatting.GOLD))
                     .append(ModUtils.translateWithFallback("menu.tpatools.config.tips.homeinviteovertime", "Sets the timeout duration for home invite requests.\n")
                             .withStyle(ChatFormatting.WHITE))
-                    .append(ModUtils.translateWithFallback("menu.tpatools.config.default.homeinviteovertime", "- Default: 30 (unit: seconds) (currently set to {} seconds)", ModConfigs.HOME_INVITE_TIMEOUT.getAsInt())
+                    .append(ModUtils.translateWithFallback("menu.tpatools.config.default.homeinviteovertime", "- Default: 30 (unit: seconds) (currently set to {} seconds)", ModConfigs.getHomeInviteTimeout())
                             .withStyle(ChatFormatting.GRAY));
 
             // 按钮
-            int homeInviteOverTime = ModConfigs.HOME_INVITE_TIMEOUT.getAsInt();
+            int homeInviteOverTime = ModConfigs.getHomeInviteTimeout();
             menu.append(Component.literal(" "))
                     .append(createI18nButton("menu.tpatools.config.button.homeinviteovertime_30",
                             "menu.tpatools.config.hover.homeinviteovertime",
@@ -1366,11 +1366,11 @@ public class ModChatMenus {
                             .withStyle(ChatFormatting.GOLD))
                     .append(ModUtils.translateWithFallback("menu.tpatools.config.tips.rtpscope", "Sets the radius for random teleportation.\n")
                             .withStyle(ChatFormatting.WHITE))
-                    .append(ModUtils.translateWithFallback("menu.tpatools.config.default.rtpscope", "- Default: 100000 (unit: blocks) (currently set to %d blocks)", ModConfigs.RTP_SCOPE.getAsInt())
+                    .append(ModUtils.translateWithFallback("menu.tpatools.config.default.rtpscope", "- Default: 100000 (unit: blocks) (currently set to %d blocks)", ModConfigs.getRtpScope())
                             .withStyle(ChatFormatting.GRAY));
 
             // 按钮
-            int rtpScope = ModConfigs.RTP_SCOPE.getAsInt();
+            int rtpScope = ModConfigs.getRtpScope();
             menu.append(Component.literal(" "))
                     .append(createI18nButton("menu.tpatools.config.button.rtpscope_10000",
                             "menu.tpatools.config.hover.rtpscope",
@@ -1417,11 +1417,11 @@ public class ModChatMenus {
                             .withStyle(ChatFormatting.GOLD))
                     .append(ModUtils.translateWithFallback("menu.tpatools.config.tips.rtpcdtime", "Sets the cooldown time for random teleportation.\n")
                             .withStyle(ChatFormatting.WHITE))
-                    .append(ModUtils.translateWithFallback("menu.tpatools.config.default.rtpcdtime", "- Default: 30 (unit: seconds) (currently set to {} seconds)", ModConfigs.RTP_COOLDOWN_TIME.getAsInt())
+                    .append(ModUtils.translateWithFallback("menu.tpatools.config.default.rtpcdtime", "- Default: 30 (unit: seconds) (currently set to {} seconds)", ModConfigs.getRtpCooldownTime())
                             .withStyle(ChatFormatting.GRAY));
 
             // 按钮
-            int rtpcoolDown = ModConfigs.RTP_COOLDOWN_TIME.getAsInt();
+            int rtpcoolDown = ModConfigs.getRtpCooldownTime();
             menu.append(Component.literal(" "))
                     .append(createI18nButton("menu.tpatools.config.button.rtpcdtime_30",
                             "menu.tpatools.config.hover.rtpcdtime",
@@ -1462,11 +1462,11 @@ public class ModChatMenus {
                             .withStyle(ChatFormatting.GOLD))
                     .append(ModUtils.translateWithFallback("menu.tpatools.config.tips.setmaxwarpcount", "Sets the maximum number of warps.\n")
                             .withStyle(ChatFormatting.WHITE))
-                    .append(ModUtils.translateWithFallback("menu.tpatools.config.default.setmaxwarpcount", "- Default: 3 (currently set to {} warps)", ModConfigs.MAX_WARP_COUNT.getAsInt())
+                    .append(ModUtils.translateWithFallback("menu.tpatools.config.default.setmaxwarpcount", "- Default: 3 (currently set to {} warps)", ModConfigs.getMaxWarpCount())
                             .withStyle(ChatFormatting.GRAY));
 
             // 按钮
-            int maxWarpCount = ModConfigs.MAX_WARP_COUNT.getAsInt();
+            int maxWarpCount = ModConfigs.getMaxWarpCount();
             menu.append(Component.literal(" "))
                     .append(createI18nButton("menu.tpatools.config.button.setmaxwarpcount_1",
                             "menu.tpatools.config.hover.maxwarpcount",

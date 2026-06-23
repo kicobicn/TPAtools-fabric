@@ -20,14 +20,14 @@ public class DatabaseManager {
     // 初始化数据库连接
     public static void initialize() {
         // 从配置文件读取数据库设置
-        DATABASE_TYPE = ModConfigs.DATABASE_TYPE.get();
-        
+        DATABASE_TYPE = ModConfigs.getDatabaseType();
+
         if (DATABASE_TYPE.equals("mysql")) {
-            host = ModConfigs.MYSQL_HOST.get();
-            port = ModConfigs.MYSQL_PORT.getAsInt();
-            database = ModConfigs.MYSQL_DATABASE.get();
-            username = ModConfigs.MYSQL_USERNAME.get();
-            password = ModConfigs.MYSQL_PASSWORD.get();
+            host = ModConfigs.getMysqlHost();
+            port = ModConfigs.getMysqlPort();
+            database = ModConfigs.getMysqlDatabase();
+            username = ModConfigs.getMysqlUsername();
+            password = ModConfigs.getMysqlPassword();
             
             try {
                 DriverManager.registerDriver(new Driver());

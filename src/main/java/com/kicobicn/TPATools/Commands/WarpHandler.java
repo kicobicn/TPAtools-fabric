@@ -219,9 +219,10 @@ public class WarpHandler {
     }
     
     private static int setWarp(ServerPlayer player, String name) {
-        if (warpPoints.size() >= ModConfigs.MAX_WARP_COUNT.getAsInt()) {
-            player.sendSystemMessage(ModUtils.translateWithFallback(
-                    "command.tpatool.warp.limit_exceeded", "Warp limit exceeded! Maximum allowed: %s", ModConfigs.MAX_WARP_COUNT.getAsInt()
+        if (warpPoints.size() >= ModConfigs.getMaxWarpCount()) {
+            player.sendSystemMessage(
+                    ModUtils.translateWithFallback(
+                    "command.tpatool.warp.limit_exceeded", "Warp limit exceeded! Maximum allowed: %s", ModConfigs.getMaxWarpCount()
             ));
             return 0;
         }
