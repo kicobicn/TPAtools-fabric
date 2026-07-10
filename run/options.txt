@@ -44,7 +44,7 @@ biomeBlendRadius:0
 renderClouds:"false"
 resourcePacks:["fabric"]
 incompatibleResourcePacks:[]
-lastServer:
+lastServer:0.0.0.0:25565
 lang:zh_cn
 soundDevice:""
 chatVisibility:0

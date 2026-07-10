@@ -10,6 +10,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -169,8 +170,17 @@ public class GraveHandler {
             return 0;
         }
         BackHandler.recordPosition(player);
+        double teleX = pos.x;
+        double teleY = pos.y;
+        double teleZ = pos.z;
+        if (ModConfigs.isSafeTeleport()) {
+            BlockPos safePos = ModUtils.findSafeTeleportPosition(level, teleX, teleY, teleZ);
+            teleX = safePos.getX() + 0.5;
+            teleY = safePos.getY();
+            teleZ = safePos.getZ() + 0.5;
+        }
         // 使用支持骑乘链和拴绳链的传送方法
-        ModUtils.teleportWithAllChains(player, level, pos.x, pos.y, pos.z, pos.yRot, pos.xRot);
+        ModUtils.teleportWithAllChains(player, level, teleX, teleY, teleZ, pos.yRot, pos.xRot);
         player.sendSystemMessage(ModUtils.translateWithFallback(
                 "command.tpatool.grave.success", "Teleported to last death position."
         ));

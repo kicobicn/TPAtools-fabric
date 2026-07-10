@@ -1,4 +1,69 @@
 {
   "publicHomesByOwner": {},
-  "playerHomes": {}
+  "playerHomes": {
+    "e122e0b0-374f-3b1b-a986-63f4fefee57a": {
+      "1": {
+        "position": {
+          "x": 164.5877319101198,
+          "y": 70.0,
+          "z": -123.38936316473357,
+          "xRot": 28.35001,
+          "yRot": 10.650421,
+          "dimension": {
+            "namespace": "minecraft",
+            "path": "overworld"
+          }
+        },
+        "sharedPlayers": []
+      }
+    },
+    "39c4f4aa-4d39-353b-b70e-747427551322": {
+      "1": {
+        "position": {
+          "x": 165.5940095727179,
+          "y": 70.0,
+          "z": -123.32062561258668,
+          "xRot": 86.84995,
+          "yRot": -4.199367,
+          "dimension": {
+            "namespace": "minecraft",
+            "path": "overworld"
+          }
+        },
+        "sharedPlayers": []
+      }
+    },
+    "64aef991-58f2-3dcc-9bb9-8df57ee15c84": {
+      "1": {
+        "position": {
+          "x": 165.56255650996007,
+          "y": 70.0,
+          "z": -123.47558862598683,
+          "xRot": 90.0,
+          "yRot": 2.100708,
+          "dimension": {
+            "namespace": "minecraft",
+            "path": "overworld"
+          }
+        },
+        "sharedPlayers": []
+      }
+    },
+    "d1587dea-b047-3ee8-b46a-f3d599824159": {
+      "1": {
+        "position": {
+          "x": 165.51837193993745,
+          "y": 70.0,
+          "z": -123.46195386534816,
+          "xRot": 88.04998,
+          "yRot": -5.549344,
+          "dimension": {
+            "namespace": "minecraft",
+            "path": "overworld"
+          }
+        },
+        "sharedPlayers": []
+      }
+    }
+  }
 }

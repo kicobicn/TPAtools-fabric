@@ -7,6 +7,7 @@ import com.kicobicn.TPATools.Commands.HomeHandler;
 import com.kicobicn.TPATools.Commands.TPAHandler;
 import com.kicobicn.TPATools.Commands.WarpHandler;
 import com.kicobicn.TPATools.config.ModConfigs;
+import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.network.chat.Component;
@@ -15,8 +16,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.core.Direction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -55,6 +61,13 @@ public class ModUtils {
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             tick();
         });
+
+        ServerLivingEntityEvents.AFTER_DEATH.register(( entity, source) -> {
+            if (entity instanceof ServerPlayer player) {
+                GraveHandler.onPlayerDeath(player);
+            }
+        });
+
     }
 
     public static MutableComponent translateWithFallback(String key, String fallback, Object... args) {
@@ -208,6 +221,108 @@ public class ModUtils {
     }
 
     /**
+     * 查找安全传送位置
+     */
+    public static BlockPos findSafeTeleportPosition(ServerLevel level, double x, double y, double z) {
+        BlockPos target = BlockPos.containing(x, y, z);
+
+        if (isPositionSafeForTeleport(level, target)) {
+            return target;
+        }
+
+        BlockPos nearestSafe = null;
+        double minDistanceSq = Double.MAX_VALUE;
+
+        // 搜索范围：以目标为中心，半径 5 格的正方形区域（11×11=121个位置）
+        // 同时检查 y 轴上下 2 格
+        for (int dx = -5; dx <= 5; dx++) {
+            for (int dz = -5; dz <= 5; dz++) {
+                for (int dy = -2; dy <= 2; dy++) {
+                    BlockPos checkPos = target.offset(dx, dy, dz);
+                    if (isPositionSafeForTeleport(level, checkPos)) {
+                        // 计算距离平方（比较距离不需要开根号）
+                        double distSq = dx * dx + dy * dy + dz * dz;
+                        if (distSq < minDistanceSq) {
+                            minDistanceSq = distSq;
+                            nearestSafe = checkPos;
+                        }
+                    }
+                }
+            }
+        }
+
+        // 如果找到了安全位置，返回最近的那个
+        if (nearestSafe != null) {
+            return nearestSafe;
+        }
+
+        // 实在找不到，回退到原位置
+        return target;
+    }
+
+    private static boolean isPositionSafeForTeleport(ServerLevel level, BlockPos pos) {
+        BlockState feetBlock = level.getBlockState(pos);
+        BlockState headBlock = level.getBlockState(pos.above());
+        BlockState belowBlock = level.getBlockState(pos.below());
+
+        // 脚部/头部位置有完整碰撞体积方块（会窒息）
+        if (isFullBlocking(level, pos, feetBlock) || isFullBlocking(level, pos.above(), headBlock)) {
+            return false;
+        }
+
+        // 脚下方块必须能站立（有碰撞体积）
+        if (!belowBlock.blocksMotion()) {
+            return false;
+        }
+
+        // 排除危险方块
+        if (feetBlock.is(Blocks.LAVA) || headBlock.is(Blocks.LAVA)
+                || belowBlock.is(Blocks.LAVA)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 判断方块是否会对玩家造成阻挡（完整方块碰撞体积）
+     * 雪花、地毯等薄层不会被判定为阻挡
+     */
+    private static boolean isFullBlocking(ServerLevel level, BlockPos pos, BlockState state) {
+        if (!state.blocksMotion()) return false;
+        VoxelShape shape = state.getCollisionShape(level, pos);
+        if (shape.isEmpty()) return false;
+        // 碰撞体积最大高度 >= 0.5 格才视为有效阻挡
+        // 雪花(<4层)、地毯等薄层 maxY < 0.5，不算阻挡
+        return shape.max(Direction.Axis.Y) >= 0.5;
+    }
+
+    /**
+     * 检查某个位置是否安全（玩家可以站立）
+     * 安全条件：脚下方块是实心的，脚部位置的方块和头部位置的方块没有实心方块阻挡
+     */
+    private static boolean isSafePosition(ServerLevel level, BlockPos pos) {
+        BlockState feetBlock = level.getBlockState(pos);
+        BlockState headBlock = level.getBlockState(pos.above());
+        BlockState belowBlock = level.getBlockState(pos.below());
+
+        // 脚下方块必须是实心的（能站立）
+        if (!belowBlock.blocksMotion()) {
+            return false;
+        }
+        // 脚部位置不能有实心方块（不能卡在方块里）
+        if (feetBlock.blocksMotion()) {
+            return false;
+        }
+        // 头部位置不能有实心方块（不能窒息）
+        if (headBlock.blocksMotion()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * 传送玩家及其骑乘实体
      */
     public static void teleportWithAllChains(Entity player, ServerLevel targetLevel, double x, double y, double z, float yRot, float xRot) {
@@ -219,18 +334,21 @@ public class ModUtils {
      * 传送实体到指定位置（用于非ServerPlayer实体）
      */
     private static void teleportEntityToPosition(Entity entity, ServerLevel targetLevel, double x, double y, double z, float yRot, float xRot) {
-        // 移除实体的骑乘关系
-        entity.unRide();
-
-        // 检查目标维度是否相同
         if (entity.level() != targetLevel) {
             // 不同维度，需要跨维度传送
-            entity.changeDimension(targetLevel);
-            // changeDimension后实体位置可能不会立即更新，等待实体到达新维度后再设置位置
+            entity.unRide();
+            Entity newEntity = entity.changeDimension(targetLevel);
+            newEntity.moveTo(x, y, z, yRot, xRot);
+        } else {
+            entity.unRide();
+            if (entity.level() instanceof ServerLevel serverLevel) {
+                serverLevel.getChunkSource().removeEntity(entity);
+            }
+            entity.moveTo(x, y, z, yRot, xRot);
+            if (entity.level() instanceof ServerLevel serverLevel) {
+                serverLevel.getChunkSource().addEntity(entity);
+            }
         }
-
-        // 设置实体位置和旋转
-        entity.moveTo(x, y, z, yRot, xRot);
     }
 
     public static void tick() {

@@ -56,6 +56,7 @@ public class ModConfigs {
     private static long cooldownTime = 3 * 1000L;
     private static int timeoutTicks = 30 * 20;
     private static String defaultLanguage = "zh_cn";
+    private static boolean safeTeleport = true;
 
     // ==================== Getters ====================
     public static int getWaitSeconds() { return waitSeconds; }
@@ -79,6 +80,7 @@ public class ModConfigs {
     public static int getTimeoutTicks() { return timeoutTicks; }
     public static String getDefaultLanguage() { return defaultLanguage; }
     public static boolean isDebugEnabled() { return debugMode; }
+    public static boolean isSafeTeleport() { return safeTeleport; }
 
     // ==================== Setters ====================
     public static void setWaitSeconds(int v) { waitSeconds = v; saveConfigValues(); }
@@ -92,6 +94,7 @@ public class ModConfigs {
     public static void setMaxWarpCount(int v) { maxWarpCount = v; saveConfigValues(); }
     public static void setCooldownTime(long v) { cooldownTime = v; saveConfigValues(); }
     public static void setDefaultLanguage(String v) { defaultLanguage = v; saveConfigValues(); }
+    public static void setSafeTeleport(boolean v) { safeTeleport = v; saveConfigValues(); }
 
     // 服务器实例
     private static MinecraftServer server;
@@ -204,6 +207,7 @@ public class ModConfigs {
             if (data.maxWarpCount != null) maxWarpCount = data.maxWarpCount;
             if (data.cooldownTime != null) cooldownTime = data.cooldownTime;
             if (data.timeoutTicks != null) timeoutTicks = data.timeoutTicks;
+            if (data.safeTeleport != null) safeTeleport = data.safeTeleport;
             if (data.defaultLanguage != null) defaultLanguage = data.defaultLanguage;
             DebugLog.info("Config loaded from {}", configFile);
         } catch (Exception e) {
@@ -234,6 +238,7 @@ public class ModConfigs {
         data.maxWarpCount = maxWarpCount;
         data.cooldownTime = cooldownTime;
         data.timeoutTicks = timeoutTicks;
+        data.safeTeleport = safeTeleport;
         data.defaultLanguage = defaultLanguage;
         try (Writer writer = Files.newBufferedWriter(getConfigFile())) {
             CONFIG_GSON.toJson(data, writer);
@@ -264,6 +269,7 @@ public class ModConfigs {
         Integer maxWarpCount;
         Long cooldownTime;
         Integer timeoutTicks;
+        Boolean safeTeleport;
         String defaultLanguage;
     }
 
@@ -507,6 +513,28 @@ public class ModConfigs {
                                                             true
                                                     );
                                                     DebugLog.info("Ride entity teleport {} by {}", enable ? "enabled" : "disabled", context.getSource().getDisplayName().getString());
+                                                    return 1;
+                                                })))
+                                .then(Commands.literal("safeteleport")
+                                        .executes(context -> {
+                                            ServerPlayer player = context.getSource().getPlayerOrException();
+                                            ModChatMenus.ConfigMenus.showSafeTeleportMenu(player);
+                                            return 1;
+                                        })
+                                        .then(Commands.argument("enable", StringArgumentType.string())
+                                                .suggests(BOOLEAN_SUGGESTIONS)
+                                                .executes(context -> {
+                                                    String enableStr = StringArgumentType.getString(context, "enable");
+                                                    boolean enable = enableStr.equalsIgnoreCase("true");
+                                                    setSafeTeleport(enable);
+                                                    context.getSource().sendSuccess(
+                                                            () -> ModUtils.translateWithFallback(
+                                                                    enable ? "command.tpatool.config.safeteleport.enabled" : "command.tpatool.config.safeteleport.disabled",
+                                                                    enable ? "Safe teleport enabled." : "Safe teleport disabled."
+                                                            ),
+                                                            true
+                                                    );
+                                                    DebugLog.info("Safe teleport {} by {}", enable ? "enabled" : "disabled", context.getSource().getDisplayName().getString());
                                                     return 1;
                                                 })))
                                 .then(Commands.literal("rtpcdtime")
