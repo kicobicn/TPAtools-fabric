@@ -122,7 +122,7 @@ public class HomeHandler {
                         float xRot = rs.getFloat("x_rot");
                         float yRot = rs.getFloat("y_rot");
 
-                        Home.Position pos = new Home.Position(x, y, z, xRot, yRot, new ResourceLocation("minecraft", dimension));
+                        Home.Position pos = new Home.Position(x, y, z, xRot, yRot, ResourceLocation.fromNamespaceAndPath("minecraft", dimension));
                         Home home = new Home(pos, new ArrayList<>());
                         home.sharedPlayers = new ArrayList<>();
 
@@ -673,8 +673,7 @@ public class HomeHandler {
                 teleY = safePos.getY();
                 teleZ = safePos.getZ() + 0.5;
             }
-            player.teleportTo(level, teleX, teleY, teleZ,
-                    home.position.yRot, home.position.xRot);
+            player.teleportTo(level, teleX, teleY, teleZ, Set.of(), home.position.yRot, home.position.xRot, false);
             player.sendSystemMessage(ModUtils.translateWithFallback(
                     "command.tpatool.home.teleported", "Teleported to home %s.", name
             ));
@@ -965,7 +964,7 @@ public class HomeHandler {
             player.teleportTo(
                     targetLevel,
                     teleX, teleY, teleZ,
-                    home.position.xRot, home.position.yRot
+                    Set.of(), home.position.yRot, home.position.xRot, false
             );
             player.sendSystemMessage(ModUtils.translateWithFallback(
                     "command.tpatool.home.other_teleported", "Teleported to %s's home %s.", ownerName, homeName

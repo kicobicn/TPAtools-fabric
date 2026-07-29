@@ -1,17 +1,17 @@
 {
 	"schemaVersion": 1,
 	"id": "tpatools",
-	"version": "${version}",
+	"version": "1.1.3+1.21.5",
 	"name": "TPATools",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "A mod that integrates the/tpa ,/home, and other command and functions for server.",
 	"authors": [
-		"Me!"
+		"kicobicn"
 	],
 	"contact": {
 		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"sources": "https://github.com/kicobicn/TPAtools"
 	},
-	"license": "CC0-1.0",
+	"license": "CC-BY-NC-4.0",
 	"icon": "assets/tpatools/icon.png",
 	"environment": "*",
 	"entrypoints": {
@@ -26,9 +26,9 @@
 		"tpatools.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.18.1",
-		"minecraft": "~1.20",
-		"java": ">=17",
+		"fabricloader": ">=0.19.3",
+		"minecraft": ">=1.21.5 <=1.21.10",
+		"java": ">=21",
 		"fabric-api": "*"
 	},
 	"suggests": {

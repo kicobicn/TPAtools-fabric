@@ -15,10 +15,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 public class RTPHandler {
     
@@ -87,7 +84,7 @@ public class RTPHandler {
 
         // 传送玩家
         player.teleportTo(world, safePos.getX() + 0.5, safePos.getY() + 1, safePos.getZ() + 0.5, 
-                          player.getYRot(), player.getXRot());
+                          Set.of(), player.getYRot(), player.getXRot(), false);
         
         // 设置冷却时间
         setCooldown(playerUUID);

@@ -70,7 +70,7 @@ public class WarpHandler {
                     float yRot = rs.getFloat("y_rot");
 
                     // 解析维度字符串为 ResourceLocation
-                    ResourceLocation dimension = new ResourceLocation(dimensionStr);
+                    ResourceLocation dimension = ResourceLocation.fromNamespaceAndPath(dimensionStr, dimensionStr);
 
                     // 创建 WarpPoint 对象
                     WarpPoint warpPoint = new WarpPoint(name, dimension, x, y, z, yRot, xRot);

@@ -1,168 +1,165 @@
-[15:22:53] [main/INFO] (FabricLoader/GameProvider) Loading Minecraft 1.20 with Fabric Loader 0.18.1
-[15:22:53] [main/INFO] (FabricLoader) Loading 47 mods:
-	- fabric-api 0.83.0+1.20
-	- fabric-api-base 0.4.29+b04edc7a27
-	- fabric-api-lookup-api-v1 1.6.34+4d8536c927
-	- fabric-biome-api-v1 13.0.10+b3afc78b27
-	- fabric-block-api-v1 1.0.9+e022e5d127
-	- fabric-blockrenderlayer-v1 1.1.39+b3afc78b27
-	- fabric-client-tags-api-v1 1.0.20+b3afc78b27
-	- fabric-command-api-v2 2.2.11+b3afc78b27
-	- fabric-content-registries-v0 4.0.7+b3afc78b27
-	- fabric-convention-tags-v1 1.5.3+b3afc78b27
-	- fabric-crash-report-info-v1 0.2.18+aeb40ebe27
-	- fabric-data-generation-api-v1 12.1.10+b3afc78b27
-	- fabric-dimensions-v1 2.1.51+b3afc78b27
-	- fabric-entity-events-v1 1.5.21+b3afc78b27
-	- fabric-events-interaction-v0 0.6.0+b3afc78b27
-	- fabric-game-rule-api-v1 1.0.38+b04edc7a27
-	- fabric-gametest-api-v1 1.2.10+b3afc78b27
-	- fabric-item-api-v1 2.1.26+b3afc78b27
-	- fabric-item-group-api-v1 4.0.7+b3afc78b27
-	- fabric-key-binding-api-v1 1.0.36+fb8d95da27
-	- fabric-lifecycle-events-v1 2.2.20+b3afc78b27
-	- fabric-loot-api-v2 1.1.37+b3afc78b27
-	- fabric-message-api-v1 5.1.6+b3afc78b27
-	- fabric-mining-level-api-v1 2.1.47+b3afc78b27
-	- fabric-models-v0 0.3.35+b3afc78b27
-	- fabric-networking-api-v1 1.3.8+b3afc78b27
-	- fabric-object-builder-api-v1 11.0.6+b3afc78b27
-	- fabric-particles-v1 1.0.28+b3afc78b27
-	- fabric-recipe-api-v1 1.0.18+b3afc78b27
-	- fabric-registry-sync-v0 2.2.6+b3afc78b27
-	- fabric-renderer-api-v1 3.0.1+b3afc78b27
-	- fabric-renderer-indigo 1.3.1+b3afc78b27
-	- fabric-rendering-data-attachment-v1 0.3.33+b3afc78b27
-	- fabric-rendering-fluids-v1 3.0.26+b3afc78b27
-	- fabric-rendering-v1 3.0.6+b3afc78b27
-	- fabric-resource-conditions-api-v1 2.3.4+b3afc78b27
-	- fabric-resource-loader-v0 0.11.7+f7923f6d27
-	- fabric-screen-api-v1 2.0.6+b3afc78b27
-	- fabric-screen-handler-api-v1 1.3.27+b3afc78b27
-	- fabric-sound-api-v1 1.0.12+b3afc78b27
-	- fabric-transfer-api-v1 3.2.2+b3afc78b27
-	- fabric-transitive-access-wideners-v1 4.2.0+b3afc78b27
-	- fabricloader 0.18.1
+[12:55:16] [main/INFO] (FabricLoader/GameProvider) Loading Minecraft 1.21.5 with Fabric Loader 0.19.3
+[12:55:16] [main/INFO] (FabricLoader) Loading 55 mods:
+	- fabric-api 0.128.2+1.21.5
+	- fabric-api-base 0.4.62+73a52b4b49
+	- fabric-api-lookup-api-v1 1.6.96+86c3a9f149
+	- fabric-biome-api-v1 16.0.7+2dd063df49
+	- fabric-block-api-v1 1.1.0+ed91556f49
+	- fabric-block-view-api-v2 1.0.26+aa6d566c49
+	- fabric-blockrenderlayer-v1 2.0.16+86c3a9f149
+	- fabric-client-gametest-api-v1 4.2.0+dac2d6e349
+	- fabric-client-tags-api-v1 1.1.37+86c3a9f149
+	- fabric-command-api-v1 1.2.70+f71b366f49
+	- fabric-command-api-v2 2.2.49+73a52b4b49
+	- fabric-commands-v0 0.2.87+df3654b349
+	- fabric-content-registries-v0 10.0.14+3e6c1f7d49
+	- fabric-convention-tags-v1 2.1.33+7f945d5b49
+	- fabric-convention-tags-v2 2.15.2+6d9989f349
+	- fabric-crash-report-info-v1 0.3.12+86c3a9f149
+	- fabric-data-attachment-api-v1 1.8.5+6d9989f349
+	- fabric-data-generation-api-v1 22.5.2+a0fab30c49
+	- fabric-dimensions-v1 4.0.17+3e6c1f7d49
+	- fabric-entity-events-v1 2.1.0+3ce7866349
+	- fabric-events-interaction-v0 4.0.15+64e3057949
+	- fabric-game-rule-api-v1 1.0.70+c327076a49
+	- fabric-gametest-api-v1 3.1.3+2a6ec84b49
+	- fabric-item-api-v1 11.5.0+0620fe4749
+	- fabric-item-group-api-v1 4.2.9+3459fc6149
+	- fabric-key-binding-api-v1 1.0.63+ecf51cdc49
+	- fabric-keybindings-v0 0.2.61+df3654b349
+	- fabric-lifecycle-events-v1 2.6.0+230071a049
+	- fabric-loot-api-v2 3.0.48+3f89f5a549
+	- fabric-loot-api-v3 1.0.36+86c3a9f149
+	- fabric-message-api-v1 6.1.0+fe971bba49
+	- fabric-model-loading-api-v1 5.2.3+5281b90749
+	- fabric-networking-api-v1 4.5.0+775be32c49
+	- fabric-object-builder-api-v1 21.1.2+b8d6ba7049
+	- fabric-particles-v1 4.1.2+112e550e49
+	- fabric-recipe-api-v1 8.1.8+3235ab3249
+	- fabric-registry-sync-v0 6.1.22+cd64004349
+	- fabric-renderer-api-v1 6.1.2+bdf4842249
+	- fabric-renderer-indigo 3.1.2+5281b90749
+	- fabric-rendering-data-attachment-v1 0.3.64+73761d2e49
+	- fabric-rendering-fluids-v1 3.1.27+86c3a9f149
+	- fabric-rendering-v1 11.3.0+a272b33849
+	- fabric-resource-conditions-api-v1 5.0.21+73a52b4b49
+	- fabric-resource-loader-v0 3.1.7+847e5f5c49
+	- fabric-screen-api-v1 2.0.46+86c3a9f149
+	- fabric-screen-handler-api-v1 1.3.129+c327076a49
+	- fabric-sound-api-v1 1.0.38+86c3a9f149
+	- fabric-tag-api-v1 1.0.17+ecf51cdc49
+	- fabric-transfer-api-v1 5.4.24+7b20cbb049
+	- fabric-transitive-access-wideners-v1 6.3.17+f17a180c49
+	- fabricloader 0.19.3
 	- java 21
-	- minecraft 1.20
-	- mixinextras 0.5.0
-	- tpatools 1.1.3+1.20
-[15:22:53] [main/INFO] (FabricLoader/Mixin) SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/D:/kic/Idea/gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.16.5+mixin.0.8.7/80fc3a9f592673cea87f4cd702f87991c6c9fe4d/sponge-mixin-0.16.5+mixin.0.8.7.jar Service=Knot/Fabric Env=CLIENT
-[15:22:53] [main/INFO] (FabricLoader/Mixin) Loaded Fabric development mappings for mixin remapper!
-[15:22:53] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_16
-[15:22:53] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_17
-[15:22:54] [main/INFO] (FabricLoader/MixinExtras|Service) Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.0).
-[15:22:57] [Datafixer Bootstrap/INFO] (Minecraft) 188 Datafixer optimizations took 89 milliseconds
-[15:22:58] [Render thread/INFO] (Minecraft) [STDERR]: [LWJGL] [ThreadLocalUtil] Unsupported JNI version detected, this may result in a crash. Please inform LWJGL developers.
-[15:22:58] [Render thread/INFO] (Minecraft) Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
-[15:22:59] [Render thread/ERROR] (Minecraft) Failed to verify authentication
-com.mojang.authlib.exceptions.InvalidCredentialsException: Status: 401
-	at com.mojang.authlib.exceptions.MinecraftClientHttpException.toAuthenticationException(MinecraftClientHttpException.java:56) ~[authlib-4.0.43.jar:?]
-	at com.mojang.authlib.yggdrasil.YggdrasilUserApiService.fetchProperties(YggdrasilUserApiService.java:156) ~[authlib-4.0.43.jar:?]
-	at com.mojang.authlib.yggdrasil.YggdrasilUserApiService.<init>(YggdrasilUserApiService.java:55) ~[authlib-4.0.43.jar:?]
-	at com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService.createUserApiService(YggdrasilAuthenticationService.java:124) ~[authlib-4.0.43.jar:?]
-	at net.minecraft.client.Minecraft.createUserApiService(Minecraft.java:733) ~[minecraft-merged-90f9c645ae-1.20-loom.mappings.1_20.layered+hash.2198-v2.jar:?]
-	at net.minecraft.client.Minecraft.<init>(Minecraft.java:442) ~[minecraft-merged-90f9c645ae-1.20-loom.mappings.1_20.layered+hash.2198-v2.jar:?]
-	at net.minecraft.client.main.Main.main(Main.java:211) ~[minecraft-merged-90f9c645ae-1.20-loom.mappings.1_20.layered+hash.2198-v2.jar:?]
-	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:514) ~[fabric-loader-0.18.1.jar:?]
-	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:72) ~[fabric-loader-0.18.1.jar:?]
-	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23) ~[fabric-loader-0.18.1.jar:?]
-	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86) ~[dev-launch-injector-0.2.1+build.8.jar:?]
-Caused by: com.mojang.authlib.exceptions.MinecraftClientHttpException: Status: 401
-	at com.mojang.authlib.minecraft.client.MinecraftClient.readInputStream(MinecraftClient.java:85) ~[authlib-4.0.43.jar:?]
-	at com.mojang.authlib.minecraft.client.MinecraftClient.get(MinecraftClient.java:48) ~[authlib-4.0.43.jar:?]
-	at com.mojang.authlib.yggdrasil.YggdrasilUserApiService.fetchProperties(YggdrasilUserApiService.java:129) ~[authlib-4.0.43.jar:?]
-	... 9 more
-[15:22:59] [Render thread/INFO] (Minecraft) Setting user: Player906
-[15:22:59] [Render thread/INFO] (TPATools) TPATools mod initializing...
-[15:22:59] [Render thread/INFO] (TPATools) TPATools mod initialized successfully
-[15:22:59] [Render thread/INFO] (Indigo) [Indigo] Registering Indigo renderer!
-[15:23:00] [Render thread/INFO] (Minecraft) Backend library: LWJGL version 3.3.2-snapshot
-[15:23:01] [Render thread/INFO] (Minecraft) Reloading ResourceManager: vanilla, fabric (fabric-resource-loader-v0, fabric-key-binding-api-v1, fabric-registry-sync-v0, fabric-resource-conditions-api-v1, fabric-loot-api-v2, fabric-sound-api-v1, fabricloader, fabric-message-api-v1, fabric-crash-report-info-v1, fabric-api, fabric-screen-api-v1, fabric-mining-level-api-v1, fabric-item-group-api-v1, fabric-rendering-v1, fabric-transfer-api-v1, fabric-item-api-v1, fabric-gametest-api-v1, fabric-renderer-api-v1, fabric-rendering-fluids-v1, fabric-block-api-v1, fabric-events-interaction-v0, tpatools, fabric-rendering-data-attachment-v1, fabric-convention-tags-v1, fabric-networking-api-v1, fabric-client-tags-api-v1, fabric-transitive-access-wideners-v1, fabric-renderer-indigo, fabric-api-base, fabric-dimensions-v1, fabric-particles-v1, fabric-data-generation-api-v1, fabric-entity-events-v1, fabric-models-v0, fabric-api-lookup-api-v1, fabric-object-builder-api-v1, fabric-command-api-v2, fabric-biome-api-v1, fabric-lifecycle-events-v1, fabric-screen-handler-api-v1, fabric-recipe-api-v1, fabric-blockrenderlayer-v1, fabric-content-registries-v0, fabric-game-rule-api-v1)
-[15:23:01] [Worker-Main-1/INFO] (Minecraft) Found unifont_all_no_pua-15.0.06.hex, loading
-[15:23:01] [Realms Notification Availability checker #1/INFO] (Minecraft) Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: FabricMC
-[15:23:02] [Render thread/WARN] (Minecraft) Missing sound for event: minecraft:item.goat_horn.play
-[15:23:02] [Render thread/WARN] (Minecraft) Missing sound for event: minecraft:entity.goat.screaming.horn_break
-[15:23:02] [Render thread/INFO] (Minecraft) OpenAL initialized on device OpenAL Soft on 扬声器 (2- Realtek(R) Audio)
-[15:23:02] [Render thread/INFO] (Minecraft) Sound engine started
-[15:23:02] [Render thread/INFO] (Minecraft) Created: 1024x512x0 minecraft:textures/atlas/blocks.png-atlas
-[15:23:02] [Render thread/INFO] (Minecraft) Created: 256x256x0 minecraft:textures/atlas/signs.png-atlas
-[15:23:02] [Render thread/INFO] (Minecraft) Created: 512x512x0 minecraft:textures/atlas/banner_patterns.png-atlas
-[15:23:02] [Render thread/INFO] (Minecraft) Created: 512x512x0 minecraft:textures/atlas/shield_patterns.png-atlas
-[15:23:02] [Render thread/INFO] (Minecraft) Created: 1024x1024x0 minecraft:textures/atlas/armor_trims.png-atlas
-[15:23:02] [Render thread/INFO] (Minecraft) Created: 256x256x0 minecraft:textures/atlas/chest.png-atlas
-[15:23:02] [Render thread/INFO] (Minecraft) Created: 128x64x0 minecraft:textures/atlas/decorated_pot.png-atlas
-[15:23:02] [Render thread/INFO] (Minecraft) Created: 512x256x0 minecraft:textures/atlas/beds.png-atlas
-[15:23:02] [Render thread/INFO] (Minecraft) Created: 512x256x0 minecraft:textures/atlas/shulker_boxes.png-atlas
-[15:23:02] [Render thread/WARN] (Minecraft) Shader rendertype_entity_translucent_emissive could not find sampler named Sampler2 in the specified shader program.
-[15:23:02] [Render thread/INFO] (Minecraft) Created: 256x256x0 minecraft:textures/atlas/particles.png-atlas
-[15:23:02] [Render thread/INFO] (Minecraft) Created: 256x256x0 minecraft:textures/atlas/paintings.png-atlas
-[15:23:02] [Render thread/INFO] (Minecraft) Created: 128x128x0 minecraft:textures/atlas/mob_effects.png-atlas
-[15:23:10] [Render thread/INFO] (Minecraft) Loaded 7 recipes
-[15:23:10] [Render thread/INFO] (Minecraft) Loaded 1271 advancements
-[15:23:10] [Render thread/INFO] (BiomeModificationImpl) Applied 0 biome modifications to 0 of 64 new biomes in 1.151 ms
-[15:23:10] [Server thread/INFO] (TPATools) TPATools mod: Server starting...
-[15:23:10] [Server thread/INFO] (Minecraft) Starting integrated minecraft server version 1.20
-[15:23:10] [Server thread/INFO] (Minecraft) Generating keypair
-[15:23:11] [Server thread/INFO] (Minecraft) Preparing start region for dimension minecraft:overworld
-[15:23:12] [Render thread/INFO] (Minecraft) 准备生成区域中：0%
-[15:23:12] [Render thread/INFO] (Minecraft) 准备生成区域中：0%
-[15:23:12] [Render thread/INFO] (Minecraft) 准备生成区域中：0%
-[15:23:12] [Render thread/INFO] (Minecraft) 准备生成区域中：7%
-[15:23:12] [Render thread/INFO] (Minecraft) Time elapsed: 1809 ms
-[15:23:13] [Server thread/INFO] (Minecraft) Changing view distance to 12, from 10
-[15:23:13] [Server thread/INFO] (Minecraft) Changing simulation distance to 12, from 0
-[15:23:13] [Server thread/INFO] (Minecraft) Player906[local:E:bd0771bc] logged in with entity id 130 at (-51715.489383477485, 55.24918707874468, -29457.275694416032)
-[15:23:13] [Server thread/INFO] (Minecraft) Player906加入了游戏
-[15:23:13] [Server thread/INFO] (Minecraft) Player906取得了进度[热腾腾的]
-[15:23:13] [Render thread/INFO] (Minecraft) [System] [CHAT] Player906取得了进度[热腾腾的]
-[15:23:13] [Render thread/INFO] (Minecraft) Loaded 9 advancements
-[15:23:14] [Server thread/INFO] (Minecraft) Saving and pausing game...
-[15:23:14] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[新的世界]'/minecraft:overworld
-[15:23:14] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[新的世界]'/minecraft:the_end
-[15:23:14] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[新的世界]'/minecraft:the_nether
-[15:23:16] [Server thread/INFO] (Minecraft) Saving and pausing game...
-[15:23:16] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[新的世界]'/minecraft:overworld
-[15:23:16] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[新的世界]'/minecraft:the_end
-[15:23:16] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[新的世界]'/minecraft:the_nether
-[15:23:18] [Render thread/INFO] (Minecraft) Using default channel type
-[15:23:18] [Render thread/INFO] (Minecraft) Started serving on 58168
-[15:23:18] [Render thread/INFO] (Minecraft) [System] [CHAT] 本地游戏已在端口[58168]上开启
-[15:23:32] [Server thread/INFO] (Minecraft) Player906 lost connection: 连接中断
-[15:23:32] [Server thread/INFO] (Minecraft) Player906退出了游戏
-[15:23:32] [Server thread/INFO] (Minecraft) Stopping singleplayer server as player logged out
-[15:23:33] [Server thread/INFO] (TPATools) TPATools mod: Server stopping...
-[15:23:33] [Server thread/INFO] (Minecraft) Stopping server
-[15:23:33] [Server thread/INFO] (Minecraft) Saving players
-[15:23:33] [Server thread/INFO] (Minecraft) Saving worlds
-[15:23:33] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[新的世界]'/minecraft:overworld
-[15:23:33] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[新的世界]'/minecraft:the_end
-[15:23:33] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[新的世界]'/minecraft:the_nether
-[15:23:33] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage (新的世界): All chunks are saved
-[15:23:33] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage (DIM1): All chunks are saved
-[15:23:33] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
-[15:23:33] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage: All dimensions are saved
-[15:28:46] [Render thread/INFO] (Minecraft) Connecting to 0.0.0.0, 25565
-[15:29:35] [Render thread/INFO] (Minecraft) Connecting to 0.0.0.0, 25565
-[15:29:36] [Render thread/INFO] (Minecraft) Loaded 2 advancements
-[15:29:36] [Render thread/INFO] (Minecraft) [System] [CHAT] kicobicn加入了游戏
-[15:31:37] [Render thread/INFO] (Minecraft) [System] [CHAT] kicobicn取得了进度[永恒的伙伴]
-[15:31:44] [Render thread/INFO] (Minecraft) [System] [CHAT] kicobicn 请求传送到你这里！点击接受或拒绝。\n[接受 kicobicn] [拒绝 kicobicn]
-[15:31:46] [Render thread/INFO] (Minecraft) [System] [CHAT] 已接受来自 kicobicn 的传送请求。
-[15:31:58] [Render thread/INFO] (Minecraft) [System] [CHAT] [调试]： 你没有权限打开游戏模式切换器
-[15:32:02] [Render thread/INFO] (Minecraft) [System] [CHAT] [kicobicn: 已将Player906设为服务器管理员]
-[15:32:07] [Render thread/INFO] (Minecraft) [System] [CHAT] 已将自己的游戏模式设置为创造模式
-[15:32:19] [Render thread/INFO] (Minecraft) [System] [CHAT] 已将Player906传送至1015.237366, 69.612791, 963.372138
-[15:32:27] [Render thread/INFO] (Minecraft) [System] [CHAT] kicobicn 请求传送到你这里！点击接受或拒绝。\n[接受 kicobicn] [拒绝 kicobicn]
-[15:32:29] [Render thread/INFO] (Minecraft) [System] [CHAT] 已接受来自 kicobicn 的传送请求。
-[15:32:37] [Render thread/INFO] (Minecraft) [System] [CHAT] 已将Player906传送至0.500000, 100.000000, 0.500000
-[15:32:46] [Render thread/INFO] (Minecraft) [System] [CHAT] kicobicn 请求传送到你这里！点击接受或拒绝。\n[接受 kicobicn] [拒绝 kicobicn]
-[15:32:47] [Render thread/INFO] (Minecraft) [System] [CHAT] 已接受来自 kicobicn 的传送请求。
-[15:33:00] [Render thread/INFO] (Minecraft) [System] [CHAT] Player906被杀死了
-[15:33:00] [Render thread/INFO] (Minecraft) [System] [CHAT] 杀死了Player906
-[15:33:05] [Render thread/INFO] (Minecraft) [System] [CHAT] 已传送至最后死亡位置。
-[15:33:07] [Render thread/INFO] (Minecraft) [System] [CHAT] 已传送至最后死亡位置。
-[15:33:11] [Render thread/INFO] (Minecraft) [System] [CHAT] 已传送至上一个位置。
-[15:33:12] [Render thread/INFO] (Minecraft) [System] [CHAT] 已传送至上一个位置。
-[15:33:12] [Render thread/INFO] (Minecraft) [System] [CHAT] 已传送至上一个位置。
-[15:33:22] [Render thread/INFO] (Minecraft) Stopping!
+	- minecraft 1.21.5
+	- mixinextras 0.5.4
+	- tpatools 1.1.3+1.21.5
+[12:55:16] [main/INFO] (FabricLoader/Mixin) SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/D:/kic/Idea/gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.17.3+mixin.0.8.7/41c4a3984a80f4679e759fb9f495587acc5cdac7/sponge-mixin-0.17.3+mixin.0.8.7.jar Service=Knot/Fabric Env=CLIENT
+[12:55:16] [main/INFO] (FabricLoader/Mixin) Loaded Fabric development mappings for mixin remapper!
+[12:55:16] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_21
+[12:55:17] [main/INFO] (FabricLoader/MixinExtras|Service) Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.4).
+[12:55:18] [Datafixer Bootstrap/INFO] (Minecraft) 263 Datafixer optimizations took 747 milliseconds
+[12:55:22] [Render thread/INFO] (Minecraft) Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[12:55:22] [Render thread/INFO] (Minecraft) Setting user: Player393
+[12:55:22] [Render thread/INFO] (TPATools) TPATools mod initializing...
+[12:55:22] [Render thread/INFO] (TPATools) TPATools mod initialized successfully
+[12:55:22] [Render thread/INFO] (Indigo) [Indigo] Registering Indigo renderer!
+[12:55:22] [Render thread/INFO] (Minecraft) Backend library: LWJGL version 3.3.3-snapshot
+[12:55:23] [Render thread/INFO] (Minecraft) Using optional rendering extensions: GL_KHR_debug, GL_ARB_vertex_attrib_binding, GL_ARB_direct_state_access
+[12:55:23] [Render thread/INFO] (Minecraft) Reloading ResourceManager: vanilla, fabric, fabric-api, fabric-api-base, fabric-api-lookup-api-v1, fabric-biome-api-v1, fabric-block-api-v1, fabric-block-view-api-v2, fabric-blockrenderlayer-v1, fabric-client-gametest-api-v1, fabric-client-tags-api-v1, fabric-command-api-v1, fabric-command-api-v2, fabric-commands-v0, fabric-content-registries-v0, fabric-convention-tags-v1, fabric-convention-tags-v2, fabric-crash-report-info-v1, fabric-data-attachment-api-v1, fabric-data-generation-api-v1, fabric-dimensions-v1, fabric-entity-events-v1, fabric-events-interaction-v0, fabric-game-rule-api-v1, fabric-gametest-api-v1, fabric-item-api-v1, fabric-item-group-api-v1, fabric-key-binding-api-v1, fabric-keybindings-v0, fabric-lifecycle-events-v1, fabric-loot-api-v2, fabric-loot-api-v3, fabric-message-api-v1, fabric-model-loading-api-v1, fabric-networking-api-v1, fabric-object-builder-api-v1, fabric-particles-v1, fabric-recipe-api-v1, fabric-registry-sync-v0, fabric-renderer-api-v1, fabric-renderer-indigo, fabric-rendering-data-attachment-v1, fabric-rendering-fluids-v1, fabric-rendering-v1, fabric-resource-conditions-api-v1, fabric-resource-loader-v0, fabric-screen-api-v1, fabric-screen-handler-api-v1, fabric-sound-api-v1, fabric-tag-api-v1, fabric-transfer-api-v1, fabric-transitive-access-wideners-v1, fabricloader, tpatools
+[12:55:23] [Worker-Main-1/INFO] (Minecraft) Found unifont_all_no_pua-16.0.01.hex, loading
+[12:55:23] [Worker-Main-11/INFO] (Minecraft) Found unifont_jp_patch-16.0.01.hex, loading
+[12:55:23] [Download-1/INFO] (Minecraft) Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: FabricMC
+[12:55:23] [Download-1/ERROR] (Minecraft) Failed to fetch Realms feature flags
+com.mojang.realmsclient.exception.RealmsServiceException: Realms authentication error with message 'java.lang.RuntimeException: Failed to parse into SignedJWT: FabricMC'
+	at knot/com.mojang.realmsclient.client.RealmsClient.execute(RealmsClient.java:495) ~[minecraft-merged-736b6061eb-1.21.5-loom.mappings.1_21_5.layered+hash.2198-v2.jar:?]
+	at knot/com.mojang.realmsclient.client.RealmsClient.fetchFeatureFlags(RealmsClient.java:177) ~[minecraft-merged-736b6061eb-1.21.5-loom.mappings.1_21_5.layered+hash.2198-v2.jar:?]
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1768) ~[?:?]
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144) ~[?:?]
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642) ~[?:?]
+	at java.base/java.lang.Thread.run(Thread.java:1583) [?:?]
+[12:55:24] [Render thread/WARN] (Minecraft) minecraft:pipeline/entity_translucent_emissive shader program does not use sampler Sampler2 defined in the pipeline. This might be a bug.
+[12:55:24] [Render thread/INFO] (Minecraft) OpenAL initialized on device OpenAL Soft on 扬声器 (2- Realtek(R) Audio)
+[12:55:24] [Render thread/INFO] (Minecraft) Sound engine started
+[12:55:25] [Render thread/INFO] (Minecraft) Created: 1024x512x0 minecraft:textures/atlas/blocks.png-atlas
+[12:55:25] [Render thread/INFO] (Minecraft) Created: 256x256x0 minecraft:textures/atlas/signs.png-atlas
+[12:55:25] [Render thread/INFO] (Minecraft) Created: 512x512x0 minecraft:textures/atlas/shield_patterns.png-atlas
+[12:55:25] [Render thread/INFO] (Minecraft) Created: 512x512x0 minecraft:textures/atlas/banner_patterns.png-atlas
+[12:55:25] [Render thread/INFO] (Minecraft) Created: 2048x1024x0 minecraft:textures/atlas/armor_trims.png-atlas
+[12:55:25] [Render thread/INFO] (Minecraft) Created: 128x64x0 minecraft:textures/atlas/decorated_pot.png-atlas
+[12:55:25] [Render thread/INFO] (Minecraft) Created: 256x256x0 minecraft:textures/atlas/chest.png-atlas
+[12:55:25] [Render thread/INFO] (Minecraft) Created: 512x256x0 minecraft:textures/atlas/beds.png-atlas
+[12:55:25] [Render thread/INFO] (Minecraft) Created: 512x256x0 minecraft:textures/atlas/shulker_boxes.png-atlas
+[12:55:25] [Render thread/INFO] (Minecraft) Created: 64x64x0 minecraft:textures/atlas/map_decorations.png-atlas
+[12:55:25] [Render thread/INFO] (Minecraft) Created: 512x256x0 minecraft:textures/atlas/particles.png-atlas
+[12:55:25] [Render thread/INFO] (Minecraft) Created: 512x256x0 minecraft:textures/atlas/paintings.png-atlas
+[12:55:25] [Render thread/INFO] (Minecraft) Created: 256x128x0 minecraft:textures/atlas/mob_effects.png-atlas
+[12:55:25] [Render thread/INFO] (Minecraft) Created: 1024x512x0 minecraft:textures/atlas/gui.png-atlas
+[12:59:09] [Render thread/INFO] (Minecraft) Loaded 1373 recipes
+[12:59:09] [Render thread/INFO] (Minecraft) Loaded 1484 advancements
+[12:59:14] [Render thread/INFO] (BiomeModificationImpl) Applied 0 biome modifications to 0 of 65 new biomes in 1.110 ms
+[12:59:14] [Server thread/INFO] (TPATools) TPATools mod: Server starting...
+[12:59:14] [Server thread/INFO] (Minecraft) Starting integrated minecraft server version 1.21.5
+[12:59:14] [Server thread/INFO] (Minecraft) Generating keypair
+[12:59:16] [Server thread/INFO] (Minecraft) Preparing start region for dimension minecraft:overworld
+[12:59:16] [Render thread/INFO] (Minecraft) 准备生成区域中：2%
+[12:59:16] [Render thread/INFO] (Minecraft) 准备生成区域中：2%
+[12:59:17] [Render thread/INFO] (Minecraft) 准备生成区域中：18%
+[12:59:17] [Render thread/INFO] (Minecraft) 准备生成区域中：18%
+[12:59:18] [Render thread/INFO] (Minecraft) 准备生成区域中：51%
+[12:59:18] [Render thread/INFO] (Minecraft) Time elapsed: 2354 ms
+[12:59:18] [Server thread/INFO] (Minecraft) Changing view distance to 12, from 10
+[12:59:18] [Server thread/INFO] (Minecraft) Changing simulation distance to 12, from 0
+[12:59:19] [Server thread/INFO] (Minecraft) Player393[local:E:2a8b843c] logged in with entity id 17 at (5.5, 132.0, 5.5)
+[12:59:19] [Server thread/INFO] (Minecraft) Player393加入了游戏
+[12:59:19] [Render thread/INFO] (Minecraft) Loaded 2 advancements
+[12:59:23] [Render thread/INFO] (Minecraft) [System] [CHAT] ====== TPATools - setting ======\nTPATools 操作面板\n\n[配置设置] [调试模式] [关于]\n=============================\n
+[12:59:26] [Render thread/INFO] (Minecraft) [System] [CHAT] ====== TPATools - setting ======\n- 设置语言 (setlanguage)\n[简体中文] [英文] [法文] [西班牙文] [葡萄牙文] [有点萌的中文？]\n- 设置最大拥有家数量 (setmaxhome)\n[2] [3] [5] [设置最大拥有家数量]\n- 设置指定指令是否需要OP (needop)\n[tpa] [home] [grave] [back]\n- TPA超时时间 (tpawaittime)\n[30] [60] [TPA超时时间]\n- TPA冷却时间 (tpacdtime)\n[0] [10] [30] [TPA冷却时间]\n- 家园邀请冷却时间 (homeinvitecdtime)\n[0] [10] [30] [家园邀请冷却时间]\n- 家园邀请超时时间 (homeinviteovertime)\n[30] [60] [120] [家园邀请超时时间]\n- 是否允许在tpa时传送骑乘实体 (allowteleportrideentity)\n[禁用]\n- 安全传送检测 (safeteleport)\n[启用]\n- RTP范围 (rtpscope)\n[10000] [20000] [50000] [100000] [自定义]\n- RTP冷却时间 (rtpcdtime)\n[30] [60] [120] [自定义]\n- 设置最大warp数量 (setmaxwarpcount)\n[1] [2] [3] [4] [5] [自定义]\n- 调试模式 (debug)\n[禁用]\n=============================\n
+[12:59:33] [Render thread/INFO] (Minecraft) [System] [CHAT] ====== TPATools - about ======\n感谢你使用TPATools， 这个mod由kicobicn开发。\n 作为一个作者，我衷心对所有支持和使用TPATools的玩家表示感谢。\n 如果您喜欢这个mod，我希望您可以推荐它给其他玩家。当然， 如果可以的话，您可以在mcmod wiki页面上留下您的宝贵建议/反馈。\n如果你遇到的任何bug导致崩溃，也可在github的issue页面反馈，我会不定时查看的。\n 当然，感谢@Eirin（mcmod）提供的建议[rtp,AllowTeleportRideEntity]\n[MCMod页面] [Modrinth页面] [GitHub issue页面]\n===================
+[13:00:00] [Render thread/INFO] (Minecraft) [System] [CHAT] 家 1 已设置在当前位置。
+[13:00:07] [Server thread/INFO] (Minecraft) Saving and pausing game...
+[13:00:07] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[1.21.5]'/minecraft:overworld
+[13:00:07] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[1.21.5]'/minecraft:the_nether
+[13:00:07] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[1.21.5]'/minecraft:the_end
+[13:00:10] [Render thread/INFO] (Minecraft) Using default channel type
+[13:00:10] [Render thread/INFO] (Minecraft) Started serving on 53939
+[13:00:10] [Render thread/INFO] (Minecraft) [System] [CHAT] 本地游戏已在端口[53939]上开启
+[13:00:15] [User Authenticator #1/INFO] (Minecraft) UUID of player kicobicn is 4c1e026e-3eb2-4325-9755-b2b0aecf87cd
+[13:00:15] [Server thread/INFO] (Minecraft) kicobicn[/192.168.1.168:53956] logged in with entity id 852 at (-6.5, 142.0, 5.5)
+[13:00:15] [Server thread/INFO] (Minecraft) kicobicn加入了游戏
+[13:00:15] [Render thread/INFO] (Minecraft) [System] [CHAT] kicobicn加入了游戏
+[13:00:36] [Server thread/INFO] (Minecraft) [Player393: 已将Player393传送至66.134629, 112.783511, 48.129056]
+[13:00:36] [Render thread/INFO] (Minecraft) [System] [CHAT] 已将Player393传送至66.134629, 112.783511, 48.129056
+[13:00:38] [Server thread/INFO] (Minecraft) [Player393: 已将自己的游戏模式设置为旁观模式]
+[13:00:38] [Render thread/INFO] (Minecraft) [System] [CHAT] 已将自己的游戏模式设置为旁观模式
+[13:00:43] [Server thread/INFO] (Minecraft) [Player393: 已将自己的游戏模式设置为创造模式]
+[13:00:43] [Render thread/INFO] (Minecraft) [System] [CHAT] 已将自己的游戏模式设置为创造模式
+[13:00:49] [Render thread/INFO] (Minecraft) [System] [CHAT] 家 2 已设置在当前位置。
+[13:00:55] [Server thread/INFO] (Minecraft) [Player393: 召唤了新的马]
+[13:00:55] [Render thread/INFO] (Minecraft) [System] [CHAT] 召唤了新的马
+[13:01:30] [Server thread/INFO] (Minecraft) Player393取得了进度[永恒的伙伴]
+[13:01:30] [Render thread/INFO] (Minecraft) [System] [CHAT] Player393取得了进度[永恒的伙伴]
+[13:01:30] [Render thread/INFO] (Minecraft) Loaded 8 advancements
+[13:01:36] [Render thread/INFO] (Minecraft) [System] [CHAT] ====== TPATools - setting ======\nTPATools 操作面板\n\n[配置设置] [调试模式] [关于]\n=============================\n
+[13:01:38] [Render thread/INFO] (Minecraft) [System] [CHAT] ====== TPATools - setting ======\n- 设置语言 (setlanguage)\n[简体中文] [英文] [法文] [西班牙文] [葡萄牙文] [有点萌的中文？]\n- 设置最大拥有家数量 (setmaxhome)\n[2] [3] [5] [设置最大拥有家数量]\n- 设置指定指令是否需要OP (needop)\n[tpa] [home] [grave] [back]\n- TPA超时时间 (tpawaittime)\n[30] [60] [TPA超时时间]\n- TPA冷却时间 (tpacdtime)\n[0] [10] [30] [TPA冷却时间]\n- 家园邀请冷却时间 (homeinvitecdtime)\n[0] [10] [30] [家园邀请冷却时间]\n- 家园邀请超时时间 (homeinviteovertime)\n[30] [60] [120] [家园邀请超时时间]\n- 是否允许在tpa时传送骑乘实体 (allowteleportrideentity)\n[禁用]\n- 安全传送检测 (safeteleport)\n[启用]\n- RTP范围 (rtpscope)\n[10000] [20000] [50000] [100000] [自定义]\n- RTP冷却时间 (rtpcdtime)\n[30] [60] [120] [自定义]\n- 设置最大warp数量 (setmaxwarpcount)\n[1] [2] [3] [4] [5] [自定义]\n- 调试模式 (debug)\n[禁用]\n=============================\n
+[13:01:39] [Server thread/INFO] (Minecraft) [Player393: 已启用骑乘实体传送。]
+[13:01:39] [Render thread/INFO] (Minecraft) [System] [CHAT] 已启用骑乘实体传送。
+[13:01:45] [Render thread/INFO] (Minecraft) [System] [CHAT] ====== TPATools - setting ======\n- 设置语言 (setlanguage)\n[简体中文] [英文] [法文] [西班牙文] [葡萄牙文] [有点萌的中文？]\n- 设置最大拥有家数量 (setmaxhome)\n[2] [3] [5] [设置最大拥有家数量]\n- 设置指定指令是否需要OP (needop)\n[tpa] [home] [grave] [back]\n- TPA超时时间 (tpawaittime)\n[30] [60] [TPA超时时间]\n- TPA冷却时间 (tpacdtime)\n[0] [10] [30] [TPA冷却时间]\n- 家园邀请冷却时间 (homeinvitecdtime)\n[0] [10] [30] [家园邀请冷却时间]\n- 家园邀请超时时间 (homeinviteovertime)\n[30] [60] [120] [家园邀请超时时间]\n- 是否允许在tpa时传送骑乘实体 (allowteleportrideentity)\n[启用]\n- 安全传送检测 (safeteleport)\n[启用]\n- RTP范围 (rtpscope)\n[10000] [20000] [50000] [100000] [自定义]\n- RTP冷却时间 (rtpcdtime)\n[30] [60] [120] [自定义]\n- 设置最大warp数量 (setmaxwarpcount)\n[1] [2] [3] [4] [5] [自定义]\n- 调试模式 (debug)\n[禁用]\n=============================\n
+[13:01:49] [Render thread/INFO] (Minecraft) [System] [CHAT] 已向 kicobicn 发送传送请求。
+[13:01:52] [Render thread/INFO] (Minecraft) [System] [CHAT] 你的传送请求被 kicobicn 接受！
+[13:02:02] [Server thread/INFO] (Minecraft) Player393 lost connection: 连接中断
+[13:02:02] [Server thread/INFO] (Minecraft) Player393退出了游戏
+[13:02:02] [Server thread/INFO] (Minecraft) Stopping singleplayer server as player logged out
+[13:02:02] [Server thread/INFO] (TPATools) TPATools mod: Server stopping...
+[13:02:02] [Server thread/INFO] (Minecraft) Stopping server
+[13:02:02] [Server thread/INFO] (Minecraft) Saving players
+[13:02:02] [Server thread/INFO] (Minecraft) Saving worlds
+[13:02:03] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[1.21.5]'/minecraft:overworld
+[13:02:03] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[1.21.5]'/minecraft:the_nether
+[13:02:03] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[1.21.5]'/minecraft:the_end
+[13:02:03] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage (1_21_5): All chunks are saved
+[13:02:03] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[13:02:03] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[13:02:03] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage: All dimensions are saved
+[13:02:04] [Render thread/INFO] (Minecraft) Stopping!

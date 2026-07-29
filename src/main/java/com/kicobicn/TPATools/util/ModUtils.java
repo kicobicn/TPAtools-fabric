@@ -155,7 +155,7 @@ public class ModUtils {
         if (!ModConfigs.isAllowTeleportRideEntity()) {
             // 如果配置禁用骑乘传送，只传送玩家
             if (player instanceof ServerPlayer serverPlayer) {
-                serverPlayer.teleportTo(targetLevel, x, y, z, yRot, xRot);
+                serverPlayer.teleportTo(targetLevel, x, y, z,Set.of(), yRot, xRot, false);
             } else {
                 // 对于非玩家实体，使用通用传送方法
                 player.unRide();
@@ -190,7 +190,7 @@ public class ModUtils {
             if (i == rideChain.size() - 1) {
                 // 最底层的实体传送到目标位置
                 if (entity instanceof ServerPlayer serverPlayer) {
-                    serverPlayer.teleportTo(targetLevel, x, y, z, yRot, xRot);
+                    serverPlayer.teleportTo(targetLevel, x, y, z, Set.of(), yRot, xRot, false);
                 } else {
                     // 对于非玩家实体，使用通用传送方法
                     entity.unRide();
@@ -209,7 +209,7 @@ public class ModUtils {
                     float newYRot = vehicle.getYRot() + relativeYRot;
 
                     if (entity instanceof ServerPlayer serverPlayer) {
-                        serverPlayer.teleportTo(targetLevel, newX, newY, newZ, newYRot, entity.getXRot());
+                        serverPlayer.teleportTo(targetLevel, newX, newY, newZ, Set.of(), newYRot, entity.getXRot(), false);
                     } else {
                         // 对于非玩家实体，使用通用传送方法
                         entity.unRide();
@@ -334,21 +334,8 @@ public class ModUtils {
      * 传送实体到指定位置（用于非ServerPlayer实体）
      */
     private static void teleportEntityToPosition(Entity entity, ServerLevel targetLevel, double x, double y, double z, float yRot, float xRot) {
-        if (entity.level() != targetLevel) {
-            // 不同维度，需要跨维度传送
             entity.unRide();
-            Entity newEntity = entity.changeDimension(targetLevel);
-            newEntity.moveTo(x, y, z, yRot, xRot);
-        } else {
-            entity.unRide();
-            if (entity.level() instanceof ServerLevel serverLevel) {
-                serverLevel.getChunkSource().removeEntity(entity);
-            }
-            entity.moveTo(x, y, z, yRot, xRot);
-            if (entity.level() instanceof ServerLevel serverLevel) {
-                serverLevel.getChunkSource().addEntity(entity);
-            }
-        }
+            entity.teleportTo(targetLevel, x, y, z, Set.of(), yRot, xRot, false);
     }
 
     public static void tick() {

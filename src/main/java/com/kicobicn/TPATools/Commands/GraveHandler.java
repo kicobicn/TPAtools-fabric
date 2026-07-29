@@ -52,7 +52,7 @@ public class GraveHandler {
                             x, y, z, yRot, xRot
                     );
                     // 设置维度
-                    position.dimension = new ResourceLocation("minecraft", dimension);
+                    position.dimension = ResourceLocation.fromNamespaceAndPath("minecraft", dimension);
                     
                     gravePositions.put(uuid, position);
                 }

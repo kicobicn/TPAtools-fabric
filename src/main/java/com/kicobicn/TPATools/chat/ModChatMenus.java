@@ -9,6 +9,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.*;
 import net.minecraft.server.level.ServerPlayer;
 
+import java.net.URI;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -1282,20 +1283,20 @@ public class ModChatMenus {
                     .append(ModUtils.translateWithFallback("menu.tpatools.about.main", "Thanx for using TPATools. Your translation maybe not complete.\n")
                             .withStyle(ChatFormatting.WHITE))
                     .append(ModUtils.translateWithFallback("menu.tpatools.about.url.mcmod", "[MCMod Wiki Page]")
-                            .withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.mcmod.cn/class/22216.html"))
-                                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, ModUtils.translateWithFallback("menu.tpatools.about.hover.url.mcmod", "Click to open the MCMod Wiki Page.Only for Chinese players.")))
+                            .withStyle(style -> style.withClickEvent(new ClickEvent.OpenUrl(URI.create("https://www.mcmod.cn/class/22216.html")))
+                                    .withHoverEvent(new HoverEvent.ShowText(ModUtils.translateWithFallback("menu.tpatools.about.hover.url.mcmod", "Click to open the MCMod Wiki Page.Only for Chinese players.")))
                             )
                             .withStyle(ChatFormatting.AQUA))
                     .append(Component.literal(" "))
                     .append(ModUtils.translateWithFallback("menu.tpatools.about.url.modrinth", "[Modrinth Page]")
-                            .withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://modrinth.com/mod/tpatools"))
-                                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, ModUtils.translateWithFallback("menu.tpatools.about.hover.url.modrinth", "Click to open the Modrinth Page.")))
+                            .withStyle(style -> style.withClickEvent(new ClickEvent.OpenUrl(URI.create("https://modrinth.com/mod/tpatools")))
+                                    .withHoverEvent(new HoverEvent.ShowText(ModUtils.translateWithFallback("menu.tpatools.about.hover.url.modrinth", "Click to open the Modrinth Page.")))
                             )
                             .withStyle(ChatFormatting.GREEN))
                     .append(Component.literal(" "))
                     .append(ModUtils.translateWithFallback("menu.tpatools.about.url.github", "[GitHub issue Page]")
-                            .withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/kicobicn/TPATools/issues"))
-                                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, ModUtils.translateWithFallback("menu.tpatools.about.hover.url.github", "Click to open the GitHub issue Page.")))
+                            .withStyle(style -> style.withClickEvent(new ClickEvent.OpenUrl(URI.create("https://github.com/kicobicn/TPATools/issues")))
+                                    .withHoverEvent(new HoverEvent.ShowText(ModUtils.translateWithFallback("menu.tpatools.about.hover.url.github", "Click to open the GitHub issue Page.")))
                             )
                             .withStyle(ChatFormatting.DARK_GRAY)
                     );
@@ -1674,12 +1675,11 @@ public class ModChatMenus {
                 .withStyle(style -> {
                     style = style.withColor(color);
                     if (isClickable) {
-                        style = style.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
+                        style = style.withClickEvent(new ClickEvent.RunCommand(command));
                     } else {
-                        style = style.withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command));
+                        style = style.withClickEvent(new ClickEvent.SuggestCommand(command));
                     }
-                    style = style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                            Component.literal(hoverText)));
+                    style = style.withHoverEvent(new HoverEvent.ShowText(Component.literal(hoverText)));
                     return style;
                 });
         return button;

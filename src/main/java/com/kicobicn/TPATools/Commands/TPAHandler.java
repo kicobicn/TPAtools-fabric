@@ -417,10 +417,10 @@ public class TPAHandler {
 
         String senderName = sender.getName().getString();
         MutableComponent acceptText = Component.literal("[" + ModUtils.translations.getOrDefault("command.tpatool.tpa.accept", "Accept") + " " + senderName + "]")
-                .withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpaccept " + senderName))
+                .withStyle(style -> style.withClickEvent(new ClickEvent.RunCommand("/tpaccept " + senderName))
                         .withColor(ChatFormatting.GREEN));
         MutableComponent denyText = Component.literal("[" + ModUtils.translations.getOrDefault("command.tpatool.tpa.deny", "Deny") + " " + senderName + "]")
-                .withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpadeny " + senderName))
+                .withStyle(style -> style.withClickEvent(new ClickEvent.RunCommand("/tpadeny " + senderName))
                         .withColor(ChatFormatting.RED));
         MutableComponent message = translateWithFallback(
                 isTPHere ? "command.tpatool.tpahere.received" : "command.tpatool.tpa.received",
