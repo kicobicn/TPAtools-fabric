@@ -16,11 +16,11 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -37,11 +37,11 @@ public class WarpHandler {
     
     public static class WarpPoint {
         public final String name;
-        public final ResourceLocation dimension;
+        public final Identifier dimension;
         public final double x, y, z;
         public final float yRot, xRot;
         
-        public WarpPoint(String name, ResourceLocation dimension, double x, double y, double z, float yRot, float xRot) {
+        public WarpPoint(String name, Identifier dimension, double x, double y, double z, float yRot, float xRot) {
             this.name = name;
             this.dimension = dimension;
             this.x = x;
@@ -69,8 +69,8 @@ public class WarpHandler {
                     float xRot = rs.getFloat("x_rot");
                     float yRot = rs.getFloat("y_rot");
 
-                    // 解析维度字符串为 ResourceLocation
-                    ResourceLocation dimension = ResourceLocation.fromNamespaceAndPath(dimensionStr, dimensionStr);
+                    // 解析维度字符串为 Identifier
+                    Identifier dimension = Identifier.fromNamespaceAndPath(dimensionStr, dimensionStr);
 
                     // 创建 WarpPoint 对象
                     WarpPoint warpPoint = new WarpPoint(name, dimension, x, y, z, yRot, xRot);
@@ -155,7 +155,7 @@ public class WarpHandler {
                             return 1;
                         })
                         .then(Commands.literal("set")
-                                .requires(source -> source.hasPermission(2))
+                                .requires(source -> Commands.LEVEL_GAMEMASTERS.check(source.permissions()))
                                 .then(Commands.argument("name", StringArgumentType.string())
                                         .executes(context -> {
                                             try {
@@ -197,7 +197,7 @@ public class WarpHandler {
                                     return 1;
                                 }))
                         .then(Commands.literal("remove")
-                                .requires(source -> source.hasPermission(2))
+                                .requires(source -> Commands.LEVEL_GAMEMASTERS.check(source.permissions()))
                                 .then(Commands.argument("name", StringArgumentType.string())
                                         .suggests(WARP_SUGGESTIONS)
                                         .executes(context -> {
@@ -234,7 +234,7 @@ public class WarpHandler {
             return 0;
         }
         
-        WarpPoint warp = new WarpPoint(name, player.serverLevel().dimension().location(),
+        WarpPoint warp = new WarpPoint(name, player.level().dimension().identifier(),
                 player.getX(), player.getY(), player.getZ(), 
                 player.getYRot(), player.getXRot());
         warpPoints.put(name, warp);
@@ -244,7 +244,7 @@ public class WarpHandler {
                 "command.tpatool.warp.set", "Warp point '%s' set at your current position.", name
         ));
         ModConfigs.DebugLog.info("Player {} set warp point {} at dimension={}, x={}, y={}, z={}",
-                player.getName().getString(), name, player.serverLevel().dimension().location(),
+                player.getName().getString(), name, player.level().dimension().identifier(),
                 player.getX(), player.getY(), player.getZ());
         return 1;
     }
@@ -257,9 +257,9 @@ public class WarpHandler {
             ));
             return 0;
         }
-        
-        ServerLevel level = player.getServer().getLevel(ResourceKey.create(
-                Registries.DIMENSION, warp.dimension));
+
+        MinecraftServer server = player.level().getServer();
+        ServerLevel level = server.getLevel(ResourceKey.create(Registries.DIMENSION, warp.dimension));
         if (level == null) {
             player.sendSystemMessage(ModUtils.translateWithFallback(
                     "command.tpatool.warp.invalid_dimension", "Invalid dimension for warp point '%s'!", name

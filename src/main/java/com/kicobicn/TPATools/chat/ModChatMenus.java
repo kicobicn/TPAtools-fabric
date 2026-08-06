@@ -4,30 +4,27 @@ import com.kicobicn.TPATools.Commands.HomeHandler;
 import com.kicobicn.TPATools.Commands.WarpHandler;
 import com.kicobicn.TPATools.config.ModConfigs;
 import com.kicobicn.TPATools.util.ModUtils;
-import com.mojang.authlib.GameProfile;
 import net.minecraft.ChatFormatting;
+import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.*;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.net.URI;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class ModChatMenus {
 
-    // 存储玩家的UI状态
-    private static final Map<UUID, UIState> playerUIStates = new ConcurrentHashMap<>();
-
-    // UI状态类
-    private static class UIState {
-        String currentMenu;
-        List<String> menuData;
-
-        public UIState(String currentMenu, List<String> menuData) {
-            this.currentMenu = currentMenu;
-            this.menuData = menuData;
-        }
-    }
+//    // UI状态类
+//    private static class UIState {
+//        String currentMenu;
+//        List<String> menuData;
+//
+//        public UIState(String currentMenu, List<String> menuData) {
+//            this.currentMenu = currentMenu;
+//            this.menuData = menuData;
+//        }
+//    }
 
     public static class HomeMenus {
 
@@ -255,11 +252,16 @@ public class ModChatMenus {
 
                 // 显示分享的玩家
                 List<String> sharedPlayerNames = new ArrayList<>();
-                for (UUID sharedUUID : home.sharedPlayers) {
-                    String playerName = player.getServer().getProfileCache().get(sharedUUID)
-                            .map(GameProfile::getName).orElse("Unknown");
-                    sharedPlayerNames.add(playerName);
+                MinecraftServer server = player.level().getServer();
+
+                for (UUID uuid : home.sharedPlayers) {
+                    ServerPlayer online = server.getPlayerList().getPlayer(uuid);
+                    String name = (online != null)
+                            ? online.getName().getString()
+                            : uuid.toString().substring(0, 8); // 兜底，不再依赖 ProfileCache
+                    sharedPlayerNames.add(name);
                 }
+
                 menu.append(Component.literal("  已分享给：" + String.join(" ", sharedPlayerNames) + "\n")
                         .withStyle(ChatFormatting.GRAY));
 
@@ -396,6 +398,8 @@ public class ModChatMenus {
         public static void showSharedInList(ServerPlayer player, int page) {
             List<HomeHandler.Home> sharedHomes = new ArrayList<>();
             List<String> ownerNames = new ArrayList<>();
+            Set<UUID> ownerUUIDsToResolve = new LinkedHashSet<>();
+            List<Map.Entry<UUID, String>> matchedHomes = new ArrayList<>();
 
             for (Map.Entry<UUID, Map<String, HomeHandler.Home>> entry : HomeHandler.playerHomes.entrySet()) {
                 UUID ownerUUID = entry.getKey();
@@ -403,12 +407,30 @@ public class ModChatMenus {
                     for (Map.Entry<String, HomeHandler.Home> homeEntry : entry.getValue().entrySet()) {
                         if (homeEntry.getValue().sharedPlayers.contains(player.getUUID())) {
                             sharedHomes.add(homeEntry.getValue());
-                            String ownerName = player.getServer().getProfileCache().get(ownerUUID)
-                                    .map(profile -> profile.getName()).orElse("Unknown");
-                            ownerNames.add(ownerName + ":" + homeEntry.getKey());
+                            matchedHomes.add(Map.entry(ownerUUID, homeEntry.getKey()));
+                            ownerUUIDsToResolve.add(ownerUUID);
                         }
                     }
                 }
+            }
+
+// ✅ 批量解析名称（每个 UUID 只查一次）
+            MinecraftServer server = player.level().getServer();
+            Map<UUID, String> nameCache = new HashMap<>();
+            for (UUID uuid : ownerUUIDsToResolve) {
+                ServerPlayer online = server.getPlayerList().getPlayer(uuid);
+                if (online != null) {
+                    nameCache.put(uuid, online.getName().getString());
+                } else {
+                    // ⚠️ 26.1 兜底：不再依赖 getProfileCache()
+                    // 如果你找到了正确的 cache API，替换下面这行
+                    nameCache.put(uuid, uuid.toString().substring(0, 8));
+                }
+            }
+
+// ✅ 组装结果
+            for (Map.Entry<UUID, String> match : matchedHomes) {
+                ownerNames.add(nameCache.get(match.getKey()) + ":" + match.getValue());
             }
 
             if (sharedHomes.isEmpty()) {
@@ -502,7 +524,7 @@ public class ModChatMenus {
 
             // 按钮
 
-            if (player.hasPermissions(2)) {
+            if (Commands.LEVEL_GAMEMASTERS.check(player.permissions())) {
                 menu.append(createI18nButton("menu.tpatools.config.button.configmenu",
                                 "menu.tpatools.config.hover.configmenu",
                                 "/tpatools configs",
@@ -1567,7 +1589,7 @@ public class ModChatMenus {
                         ChatFormatting.GREEN,
                         true))
                 .append(Component.literal(" "));
-        if (player.hasPermissions(2)) {
+        if (Commands.LEVEL_GAMEMASTERS.check(player.permissions())) {
             menu.append(Component.literal(" "))
                     .append(createI18nButton("menu.tpatools.warp.button.setwarp",
                             "menu.tpatools.warp.hover.setwarp",
@@ -1631,7 +1653,7 @@ public class ModChatMenus {
                             true))
                     .append(Component.literal(" "));
 
-            if (player.hasPermissions(2)) { // OP权限
+            if (Commands.LEVEL_GAMEMASTERS.check(player.permissions())) { // OP权限
                 buttons.append(createI18nButton("menu.tpatools.warp.button.remove",
                                 "menu.tpatools.warp.hover.remove",
                                 "/warp remove " + warpName,
@@ -1695,4 +1717,5 @@ public class ModChatMenus {
         String hoverText = ModUtils.translateWithFallback(hoverTranslationKey, hoverTranslationKey, hoverArgs).getString();
         return createButton(textComponent.getString(), hoverText, command, color, isClickable);
     }
+
 }

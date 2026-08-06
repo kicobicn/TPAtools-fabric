@@ -1,1 +1,13 @@
-{}
+{
+  "e2b9cbcf-86ca-37af-a4ef-9732161cb042": {
+    "dimension": {
+      "namespace": "minecraft",
+      "path": "overworld"
+    },
+    "x": 29.292010015519892,
+    "y": 126.0,
+    "z": -32.87487798545605,
+    "yRot": -46.0496,
+    "xRot": 44.100056
+  }
+}

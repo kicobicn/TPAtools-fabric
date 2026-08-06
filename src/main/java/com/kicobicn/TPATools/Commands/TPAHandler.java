@@ -467,14 +467,14 @@ public class TPAHandler {
             // 使用新的骑乘链传送方法
             ModUtils.teleportWithAllChains(
                     target,
-                    request.sender.serverLevel(),
+                    request.sender.level(),
                     request.sender.getX(), request.sender.getY(), request.sender.getZ(),
                     request.sender.getYRot(), request.sender.getXRot()
             );
         } else {
             ModUtils.teleportWithAllChains(
                     request.sender,
-                    target.serverLevel(),
+                    target.level(),
                     target.getX(), target.getY(), target.getZ(),
                     target.getYRot(), target.getXRot()
             );

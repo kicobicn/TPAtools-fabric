@@ -12,7 +12,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -110,7 +110,7 @@ public class ModUtils {
             if (server != null) {
                 var resources = server.getResourceManager().listResources("lang", path -> path.getPath().endsWith(".json"));
                 for (var entry : resources.entrySet()) {
-                    ResourceLocation loc = entry.getKey();
+                    Identifier loc = entry.getKey();
                     String path = loc.getPath();
                     if (path.startsWith("lang/") && path.endsWith(".json")) {
                         String langCode = path.substring(5, path.length() - 5); // 去掉 "lang/" 和 ".json"
@@ -298,31 +298,6 @@ public class ModUtils {
     }
 
     /**
-     * 检查某个位置是否安全（玩家可以站立）
-     * 安全条件：脚下方块是实心的，脚部位置的方块和头部位置的方块没有实心方块阻挡
-     */
-    private static boolean isSafePosition(ServerLevel level, BlockPos pos) {
-        BlockState feetBlock = level.getBlockState(pos);
-        BlockState headBlock = level.getBlockState(pos.above());
-        BlockState belowBlock = level.getBlockState(pos.below());
-
-        // 脚下方块必须是实心的（能站立）
-        if (!belowBlock.blocksMotion()) {
-            return false;
-        }
-        // 脚部位置不能有实心方块（不能卡在方块里）
-        if (feetBlock.blocksMotion()) {
-            return false;
-        }
-        // 头部位置不能有实心方块（不能窒息）
-        if (headBlock.blocksMotion()) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * 传送玩家及其骑乘实体
      */
     public static void teleportWithAllChains(Entity player, ServerLevel targetLevel, double x, double y, double z, float yRot, float xRot) {
@@ -344,7 +319,7 @@ public class ModUtils {
             Iterator<TPAHandler.TPARequest> iterator = entry.getValue().iterator();
             while (iterator.hasNext()) {
                 TPAHandler.TPARequest request = iterator.next();
-                if (System.currentTimeMillis() - request.timestamp >= ModConfigs.getTimeoutTicks() * 50) {
+                if (System.currentTimeMillis() - request.timestamp >= ModConfigs.getTimeoutTicks() * 50L) {
                     request.target.sendSystemMessage(translateWithFallback(
                             request.isTPHere ? "command.tpatool.tpahere.timeout" : "command.tpatool.tpa.timeout",
                             "Teleport request from %s has timed out.", request.sender.getName()

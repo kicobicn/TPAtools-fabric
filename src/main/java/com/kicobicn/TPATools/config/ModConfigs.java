@@ -124,7 +124,7 @@ public class ModConfigs {
     public static boolean checkCommandPermission(CommandSourceStack source, String command) {
         boolean needOp = commandPermissions.getOrDefault(command, false);
         if (needOp) {
-            return source.hasPermission(2); // 需要OP权限
+            return Commands.LEVEL_GAMEMASTERS.check(source.permissions()); // 需要OP权限
         } else {
             return true; // 不需要OP权限
         }
@@ -319,7 +319,7 @@ public class ModConfigs {
                             return 1;
                         })
                         .then(Commands.literal("configs")
-                                .requires(source -> source.hasPermission(2))
+                                .requires(source -> Commands.LEVEL_GAMEMASTERS.check(source.permissions()))
                                 .executes(context -> {
                                     ServerPlayer player = context.getSource().getPlayerOrException();
                                     ModChatMenus.ConfigMenus.showConfigsMenu(player);
@@ -608,7 +608,7 @@ public class ModConfigs {
                                                 })))
                         )
                         .then(Commands.literal("debug")
-                                .requires(source -> source.hasPermission(2))
+                                .requires(source -> Commands.LEVEL_GAMEMASTERS.check(source.permissions()))
                                 .executes(context -> {
                                     ServerPlayer player = context.getSource().getPlayerOrException();
                                     ModChatMenus.ConfigMenus.showDebugMenu(player);
@@ -631,7 +631,7 @@ public class ModConfigs {
                                         return 1;
                                     })))
                         .then(Commands.literal("about")
-                                .requires(source -> source.hasPermission(0))
+                                .requires(source -> Commands.LEVEL_ALL.check(source.permissions()))
                                 .executes(context -> {
                                     ServerPlayer player = context.getSource().getPlayerOrException();
                                     ModChatMenus.ConfigMenus.showAboutMenu(player);

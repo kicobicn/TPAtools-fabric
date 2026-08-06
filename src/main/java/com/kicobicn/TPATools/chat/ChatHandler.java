@@ -9,7 +9,6 @@ import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -43,8 +42,8 @@ public class ChatHandler {
                             .append(finalMessage);
 
                     // 取消原始消息，手动广播修改后的消息
-                    sender.getServer().execute(() -> {
-                        sender.getServer().getPlayerList().getPlayers().forEach(p ->
+                    sender.level().getServer().execute(() -> {
+                        sender.level().getServer().getPlayerList().getPlayers().forEach(p ->
                                 p.sendSystemMessage(chatMessage)
                         );
                     });
@@ -64,7 +63,7 @@ public class ChatHandler {
      */
     private static String processMentions(String message, ServerPlayer sender) {
         // 获取所有在线玩家
-        var onlinePlayers = sender.getServer().getPlayerList().getPlayers();
+        var onlinePlayers = sender.level().getServer().getPlayerList().getPlayers();
         String processedMessage = message; // 初始化为原消息
 
         for (ServerPlayer target : onlinePlayers) {
@@ -99,7 +98,7 @@ public class ChatHandler {
                 target.connection.send(titlePacket);
 
                 // 播放音效
-                target.playNotifySound(SoundEvents.NOTE_BLOCK_PLING.value(), SoundSource.PLAYERS, 1.0F, 1.0F);
+                target.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1.0F, 1.0F);
             }
         }
 

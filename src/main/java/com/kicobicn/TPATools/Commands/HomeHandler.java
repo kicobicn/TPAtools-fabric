@@ -7,7 +7,6 @@ import com.kicobicn.TPATools.chat.ModChatMenus;
 import com.kicobicn.TPATools.config.ModConfigs;
 import com.kicobicn.TPATools.database.DatabaseManager;
 import com.kicobicn.TPATools.util.ModUtils;
-import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -21,11 +20,12 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.NameAndId;
 import net.minecraft.world.level.Level;
 
 import java.io.IOException;
@@ -64,8 +64,8 @@ public class HomeHandler {
         public static class Position {
             public double x, y, z;
             public float xRot, yRot;
-            public ResourceLocation dimension; // 确认类型为 ResourceLocation
-            public Position(double x, double y, double z, float xRot, float yRot, ResourceLocation dimension) {
+            public Identifier dimension; // 确认类型为 Identifier
+            public Position(double x, double y, double z, float xRot, float yRot, Identifier dimension) {
                 this.x = x; this.y = y; this.z = z;
                 this.xRot = xRot; this.yRot = yRot; this.dimension = dimension;
             }
@@ -79,7 +79,7 @@ public class HomeHandler {
     }
 
     private static void recordLastPosition(ServerPlayer player) {
-        ResourceLocation dimension = player.level().dimension().location();
+        Identifier dimension = player.level().dimension().identifier();
         lastPositions.put(player.getUUID(), new Home.Position(
                 player.getX(), player.getY(), player.getZ(),
                 player.getXRot(), player.getYRot(), dimension
@@ -122,7 +122,7 @@ public class HomeHandler {
                         float xRot = rs.getFloat("x_rot");
                         float yRot = rs.getFloat("y_rot");
 
-                        Home.Position pos = new Home.Position(x, y, z, xRot, yRot, ResourceLocation.fromNamespaceAndPath("minecraft", dimension));
+                        Home.Position pos = new Home.Position(x, y, z, xRot, yRot, Identifier.fromNamespaceAndPath("minecraft", dimension));
                         Home home = new Home(pos, new ArrayList<>());
                         home.sharedPlayers = new ArrayList<>();
 
@@ -296,9 +296,9 @@ public class HomeHandler {
 
                         // 确保所有者名称是最新的
                         String ownerName = info.ownerName != null ? info.ownerName :
-                                (server != null && server.getProfileCache() != null ?
-                                        server.getProfileCache().get(UUID.fromString(ownerUUID))
-                                                .map(GameProfile::getName).orElse("Unknown") : "Unknown");
+                                (server != null && server.services().nameToIdCache() != null ?
+                                        server.services().nameToIdCache().get(UUID.fromString(ownerUUID))
+                                                .map(NameAndId::name).orElse("Unknown") : "Unknown");
 
                         ownerPublicHomes.put(homeName, new PublicHomeInfo(
                                 UUID.fromString(ownerUUID), ownerName, homeName
@@ -394,8 +394,8 @@ public class HomeHandler {
                 Map<String, PublicHomeInfo> ownerHomes = ownerEntry.getValue();
 
                 UUID ownerUUID = UUID.fromString(ownerUUIDStr);
-                String ownerName = player.getServer().getProfileCache().get(ownerUUID)
-                        .map(GameProfile::getName).orElse("Unknown");
+                String ownerName = player.level().getServer().services().nameToIdCache().get(ownerUUID)
+                        .map(NameAndId::name).orElse("Unknown");
 
                 for (String homeName : ownerHomes.keySet()) {
                     builder.suggest(ownerName + ":" + homeName);
@@ -406,8 +406,8 @@ public class HomeHandler {
             for (Map.Entry<UUID, Map<String, Home>> entry : playerHomes.entrySet()) {
                 UUID ownerUUID = entry.getKey();
                 if (!ownerUUID.equals(player.getUUID())) {
-                    String ownerName = player.getServer().getProfileCache().get(ownerUUID)
-                            .map(GameProfile::getName).orElse("Unknown");
+                    String ownerName = player.level().getServer().services().nameToIdCache().get(ownerUUID)
+                            .map(NameAndId::name).orElse("Unknown");
                     for (Map.Entry<String, Home> homeEntry : entry.getValue().entrySet()) {
                         if (homeEntry.getValue().sharedPlayers.contains(player.getUUID())) {
                             builder.suggest(ownerName + ":" + homeEntry.getKey());
@@ -434,12 +434,12 @@ public class HomeHandler {
     private static final SuggestionProvider<CommandSourceStack> PLAYER_NAME_SUGGESTIONS = (context, builder) -> {
         try {
             ServerPlayer player = context.getSource().getPlayerOrException();
-            MinecraftServer server = player.getServer();
+            MinecraftServer server = player.level().getServer();
             if (server != null) {
                 // 从 playerHomes 获取所有 UUID，转换为玩家名
                 for (UUID uuid : playerHomes.keySet()) {
-                    server.getProfileCache().get(uuid)
-                            .map(GameProfile::getName)
+                    server.services().nameToIdCache().get(uuid)
+                            .map(NameAndId::name)
                             .ifPresent(builder::suggest);
                 }
             }
@@ -636,7 +636,7 @@ public class HomeHandler {
             ));
             return 0;
         }
-        ResourceLocation dimension = player.level().dimension().location();
+        Identifier dimension = player.level().dimension().identifier();
         Home.Position position = new Home.Position(
                 player.getX(), player.getY(), player.getZ(),
                 player.getXRot(), player.getYRot(), dimension
@@ -655,7 +655,7 @@ public class HomeHandler {
         Map<String, Home> homes = playerHomes.get(player.getUUID());
         if (homes != null && homes.containsKey(name)) {
             Home home = homes.get(name);
-            ServerLevel level = player.getServer().getLevel(ResourceKey.create(
+            ServerLevel level = player.level().getServer().getLevel(ResourceKey.create(
                     Registries.DIMENSION, home.position.dimension));
             if (level == null) {
                 player.sendSystemMessage(ModUtils.translateWithFallback(
@@ -804,15 +804,15 @@ public class HomeHandler {
             saveHomes();
             return 1;
         } else {
-            MinecraftServer server = player.getServer();
-            Optional<GameProfile> profile = server.getProfileCache().get(targetPlayerName);
-            if (profile.isEmpty()) {
+            MinecraftServer server = player.level().getServer();
+            Optional<NameAndId> id = server.services().nameToIdCache().get(targetPlayerName);
+            if (id.isEmpty()) {
                 player.sendSystemMessage(ModUtils.translateWithFallback(
                         "command.tpatool.unshare.player_not_found", "Player %s not found!", targetPlayerName
                 ));
                 return 0;
             }
-            UUID targetUUID = profile.get().getId();
+            UUID targetUUID = id.get().id();
             if (!home.sharedPlayers.contains(targetUUID)) {
                 player.sendSystemMessage(ModUtils.translateWithFallback(
                         "command.tpatool.unshare.not_shared", "Home %s is not shared with %s!", homeName, targetPlayerName
@@ -912,14 +912,14 @@ public class HomeHandler {
             String ownerName = parts[0];
             String homeName = parts[1];
 
-            Optional<GameProfile> profile = player.getServer().getProfileCache().get(ownerName);
-            if (profile.isEmpty()) {
+            Optional<NameAndId> id = player.level().getServer().services().nameToIdCache().get(ownerName);
+            if (id.isEmpty()) {
                 player.sendSystemMessage(ModUtils.translateWithFallback(
                         "command.tpatool.home.other_not_found", "Home %s not found or not accessible!", homeArg
                 ));
                 return 0;
             }
-            UUID ownerUUID = profile.get().getId();
+            UUID ownerUUID = id.get().id();
 
             // 检查是否是公开家园
             Map<String, PublicHomeInfo> ownerPublicHomes = publicHomesByOwner.get(ownerUUID.toString());
@@ -943,7 +943,7 @@ public class HomeHandler {
             }
 
             ResourceKey<Level> dimensionKey = ResourceKey.create(Registries.DIMENSION, home.position.dimension);
-            ServerLevel targetLevel = player.getServer().getLevel(dimensionKey);
+            ServerLevel targetLevel = player.level().getServer().getLevel(dimensionKey);
             if (targetLevel == null) {
                 player.sendSystemMessage(ModUtils.translateWithFallback(
                         "command.tpatool.home.invalid_dimension", "Invalid dimension for home %s!", homeArg
@@ -1065,7 +1065,7 @@ public class HomeHandler {
                     InviteRequest req = iterator.next();
                     if (req.senderUUID.equals(sender.getUUID()) && req.homeName.equals(homeName)) {
                         // 发送超时提醒给发送方
-                        ServerPlayer timeoutSender = sender.getServer().getPlayerList().getPlayer(sender.getUUID());
+                        ServerPlayer timeoutSender = sender.level().getServer().getPlayerList().getPlayer(sender.getUUID());
                         if (timeoutSender != null) {
                             timeoutSender.sendSystemMessage(ModUtils.translateWithFallback(
                                     "command.tpatool.home.invite.timeout", 
@@ -1074,7 +1074,7 @@ public class HomeHandler {
                         }
 
                         // 发送超时提醒给接收方
-                        ServerPlayer timeoutTarget = target.getServer().getPlayerList().getPlayer(target.getUUID());
+                        ServerPlayer timeoutTarget = target.level().getServer().getPlayerList().getPlayer(target.getUUID());
                         if (timeoutTarget != null) {
                             timeoutTarget.sendSystemMessage(ModUtils.translateWithFallback(
                                     "command.tpatool.home.invite.timeout_received", 
@@ -1226,7 +1226,7 @@ public class HomeHandler {
         final String homeNameFinal = latestInvite.homeName;
 
         source.sendSuccess(() -> ModUtils.translateWithFallback("command.tpatool.home.invite.accepted", "Invite accepted! Teleporting to %s.", homeNameFinal), true);
-        ServerPlayer latestInviteSender = receiver.getServer().getPlayerList().getPlayer(latestInvite.senderUUID);
+        ServerPlayer latestInviteSender = receiver.level().getServer().getPlayerList().getPlayer(latestInvite.senderUUID);
         if (latestInviteSender != null) {
             latestInviteSender.sendSystemMessage(ModUtils.translateWithFallback("command.tpatool.home.invite.accepted_by", "Your teleport request was accepted by %s!", receiver.getName()));
         }
@@ -1292,7 +1292,7 @@ public class HomeHandler {
         final String homeNameFinal = latestInvite.homeName;
 
         source.sendSuccess(() -> ModUtils.translateWithFallback("command.tpatool.home.invite.denied", "Invite from %s denied.", homeNameFinal), true);
-        ServerPlayer latestInviteSender = receiver.getServer().getPlayerList().getPlayer(latestInvite.senderUUID);
+        ServerPlayer latestInviteSender = receiver.level().getServer().getPlayerList().getPlayer(latestInvite.senderUUID);
         if (latestInviteSender != null) {
             latestInviteSender.sendSystemMessage(ModUtils.translateWithFallback("command.tpatool.tpa.denied_by", "%s denied your invite to %s.", receiver.getName(), homeNameFinal));
         }
@@ -1300,8 +1300,8 @@ public class HomeHandler {
         return 1;
     }
 
-    private static void teleportPlayer(ServerPlayer player, double x, double y, double z, ResourceLocation dimension) {
-        ServerLevel targetLevel = player.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, dimension));
+    private static void teleportPlayer(ServerPlayer player, double x, double y, double z, Identifier dimension) {
+        ServerLevel targetLevel = player.level().getServer().getLevel(ResourceKey.create(Registries.DIMENSION, dimension));
         if (targetLevel != null) {
             double teleX = x;
             double teleY = y;

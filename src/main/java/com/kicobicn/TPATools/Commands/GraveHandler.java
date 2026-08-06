@@ -12,11 +12,12 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.level.Level;
 
 
 import java.io.IOException;
@@ -52,7 +53,7 @@ public class GraveHandler {
                             x, y, z, yRot, xRot
                     );
                     // 设置维度
-                    position.dimension = ResourceLocation.fromNamespaceAndPath("minecraft", dimension);
+                    position.dimension = Identifier.fromNamespaceAndPath("minecraft", dimension);
                     
                     gravePositions.put(uuid, position);
                 }
@@ -140,13 +141,13 @@ public class GraveHandler {
     // 在Fabric中，我们需要使用Fabric的事件系统来监听玩家死亡
     public static void onPlayerDeath(ServerPlayer player) {
         gravePositions.put(player.getUUID(), new BackHandler.PlayerPosition(
-                player.serverLevel(),
+                player.level(),
                 player.getX(), player.getY(), player.getZ(),
                 player.getYRot(), player.getXRot()
         ));
         saveGraves();
         ModConfigs.DebugLog.info("Recorded grave for {} at dimension={}, x={}, y={}, z={}",
-                player.getName().getString(), player.serverLevel().dimension().location(),
+                player.getName().getString(), player.level().dimension().identifier(),
                 player.getX(), player.getY(), player.getZ());
     }
 
@@ -159,8 +160,8 @@ public class GraveHandler {
             ));
             return 0;
         }
-        ServerLevel level = player.getServer().getLevel(ResourceKey.create(
-                Registries.DIMENSION, pos.dimension));
+        ResourceKey<Level> dimensionKey = ResourceKey.create(Registries.DIMENSION, pos.dimension);
+        ServerLevel level = player.level().getServer().getLevel(dimensionKey);
         if (level == null) {
             player.sendSystemMessage(ModUtils.translateWithFallback(
                     "command.tpatool.grave.invalid_dimension", "Invalid dimension for death position!"

@@ -10,7 +10,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -22,12 +23,12 @@ public class BackHandler {
     private static final Map<UUID, PlayerPosition> previousPositions = new HashMap<>();
 
     public static class PlayerPosition {
-        public ResourceLocation dimension;
+        public Identifier dimension;
         public final double x, y, z;
         public final float yRot, xRot;
 
         public PlayerPosition(ServerLevel level, double x, double y, double z, float yRot, float xRot) {
-            this.dimension = level.dimension().location();
+            this.dimension = level.dimension().identifier();
             this.x = x;
             this.y = y;
             this.z = z;
@@ -57,12 +58,12 @@ public class BackHandler {
 
     public static void recordPosition(ServerPlayer player) {
         previousPositions.put(player.getUUID(), new PlayerPosition(
-                player.serverLevel(),
+                player.level(),
                 player.getX(), player.getY(), player.getZ(),
                 player.getYRot(), player.getXRot()
         ));
         ModConfigs.DebugLog.log("Recorded position for {}: dimension={}, x={}, y={}, z={}",
-                player.getName().getString(), player.serverLevel().dimension().location(),
+                player.getName().getString(), player.level().dimension().identifier(),
                 player.getX(), player.getY(), player.getZ());
     }
 
@@ -74,8 +75,8 @@ public class BackHandler {
             ));
             return 0;
         }
-        ServerLevel level = player.getServer().getLevel(ResourceKey.create(
-                Registries.DIMENSION, pos.dimension));
+        MinecraftServer server = player.level().getServer();
+        ServerLevel level = server.getLevel(ResourceKey.create(Registries.DIMENSION, pos.dimension));
         if (level == null) {
             player.sendSystemMessage(ModUtils.translateWithFallback(
                     "command.tpatool.back.invalid_dimension", "Invalid dimension for previous position!"
