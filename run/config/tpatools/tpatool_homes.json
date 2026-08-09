@@ -17,38 +17,6 @@
         "sharedPlayers": []
       }
     },
-    "39c4f4aa-4d39-353b-b70e-747427551322": {
-      "1": {
-        "position": {
-          "x": 165.5940095727179,
-          "y": 70.0,
-          "z": -123.32062561258668,
-          "xRot": 86.84995,
-          "yRot": -4.199367,
-          "dimension": {
-            "namespace": "minecraft",
-            "path": "overworld"
-          }
-        },
-        "sharedPlayers": []
-      }
-    },
-    "64aef991-58f2-3dcc-9bb9-8df57ee15c84": {
-      "1": {
-        "position": {
-          "x": 165.56255650996007,
-          "y": 70.0,
-          "z": -123.47558862598683,
-          "xRot": 90.0,
-          "yRot": 2.100708,
-          "dimension": {
-            "namespace": "minecraft",
-            "path": "overworld"
-          }
-        },
-        "sharedPlayers": []
-      }
-    },
     "e122e0b0-374f-3b1b-a986-63f4fefee57a": {
       "1": {
         "position": {
@@ -81,6 +49,70 @@
         "sharedPlayers": [
           "4c1e026e-3eb2-4325-9755-b2b0aecf87cd"
         ]
+      }
+    },
+    "39c4f4aa-4d39-353b-b70e-747427551322": {
+      "1": {
+        "position": {
+          "x": 165.5940095727179,
+          "y": 70.0,
+          "z": -123.32062561258668,
+          "xRot": 86.84995,
+          "yRot": -4.199367,
+          "dimension": {
+            "namespace": "minecraft",
+            "path": "overworld"
+          }
+        },
+        "sharedPlayers": []
+      }
+    },
+    "b82821b3-8726-3f56-a046-79edba0ca58e": {
+      "1": {
+        "position": {
+          "x": -582.2345979047129,
+          "y": 64.0,
+          "z": 318.3668980695033,
+          "xRot": 0.0,
+          "yRot": 0.0,
+          "dimension": {
+            "namespace": "minecraft",
+            "path": "overworld"
+          }
+        },
+        "sharedPlayers": []
+      }
+    },
+    "64aef991-58f2-3dcc-9bb9-8df57ee15c84": {
+      "1": {
+        "position": {
+          "x": 165.56255650996007,
+          "y": 70.0,
+          "z": -123.47558862598683,
+          "xRot": 90.0,
+          "yRot": 2.100708,
+          "dimension": {
+            "namespace": "minecraft",
+            "path": "overworld"
+          }
+        },
+        "sharedPlayers": []
+      }
+    },
+    "5c5c7719-d2ce-30c8-bc42-ad9690493df6": {
+      "1": {
+        "position": {
+          "x": -7.494706630022836,
+          "y": 104.0,
+          "z": 30.723475408253226,
+          "xRot": 31.79998,
+          "yRot": 40.2,
+          "dimension": {
+            "namespace": "minecraft",
+            "path": "overworld"
+          }
+        },
+        "sharedPlayers": []
       }
     },
     "d1587dea-b047-3ee8-b46a-f3d599824159": {

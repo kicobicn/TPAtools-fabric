@@ -1,4 +1,4 @@
-version:4671
+version:4903
 ao:true
 biomeBlendRadius:0
 chunkSectionFadeInTime:0.75
@@ -13,9 +13,11 @@ fovEffectScale:1.0
 darknessEffectScale:1.0
 glintSpeed:0.5
 glintStrength:0.75
+preferredGraphicsBackend:"default"
 graphicsPreset:"custom"
 prioritizeChunkUpdates:0
 fullscreen:false
+exclusiveFullscreen:false
 gamma:0.5
 guiScale:3
 maxAnisotropyBit:2
@@ -48,7 +50,6 @@ invertYMouse:false
 realmsNotifications:true
 showSubtitles:true
 directionalAudio:false
-touchscreen:false
 bobView:true
 toggleCrouch:false
 toggleSprint:true
@@ -97,6 +98,8 @@ joinedFirstServer:true
 syncChunkWrites:true
 showAutosaveIndicator:true
 allowServerListing:true
+inGameNotification:false
+sharePresence:"all"
 onlyShowSecureChat:false
 saveChatDrafts:false
 panoramaScrollSpeed:1.0
@@ -121,6 +124,7 @@ key_key.chat:key.keyboard.t
 key_key.playerlist:key.keyboard.tab
 key_key.pickItem:key.mouse.middle
 key_key.command:key.keyboard.slash
+key_key.friends:key.keyboard.o
 key_key.socialInteractions:key.keyboard.p
 key_key.toggleGui:key.keyboard.f1
 key_key.toggleSpectatorShaderEffects:key.keyboard.f4
@@ -165,6 +169,7 @@ key_key.debug.dumpVersion:key.keyboard.v
 key_key.debug.profilingChart:key.keyboard.1
 key_key.debug.fpsCharts:key.keyboard.2
 key_key.debug.networkCharts:key.keyboard.3
+key_key.debug.lightmapTexture:key.keyboard.4
 soundCategory_master:1.0
 soundCategory_music:0.0
 soundCategory_record:1.0
