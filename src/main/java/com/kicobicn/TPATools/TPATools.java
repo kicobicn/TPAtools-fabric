@@ -57,6 +57,8 @@ public class TPATools implements ModInitializer {
 
         // 加载配置
         ModConfigs.setServer(server);
+        ModConfigs.loadConfigValues();
+        ModConfigs.saveConfigValues();
 
         // 初始化数据库
         DatabaseManager.initialize();
@@ -65,6 +67,7 @@ public class TPATools implements ModInitializer {
     private void onServerStopping(MinecraftServer server) {
         LOGGER.info("TPATools mod: Server stopping...");
         DatabaseManager.close();
+        ModConfigs.saveConfigValues();
     }
 
     private void onServerTick(MinecraftServer server) {
