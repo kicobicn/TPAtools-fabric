@@ -7,6 +7,7 @@ import com.kicobicn.TPATools.chat.ModChatMenus;
 import com.kicobicn.TPATools.config.ModConfigs;
 import com.kicobicn.TPATools.database.DatabaseManager;
 import com.kicobicn.TPATools.util.ModUtils;
+import com.kicobicn.TPATools.util.TeleportDelayManager;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -55,9 +56,6 @@ public class HomeHandler {
         }
     }
 
-    // 存储最后位置的映射
-    private static final Map<UUID, Home.Position> lastPositions = new HashMap<>();
-
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     public static class Home {
@@ -77,15 +75,7 @@ public class HomeHandler {
             this.sharedPlayers = sharedPlayers != null ? sharedPlayers : new ArrayList<>();
         }
     }
-
-    private static void recordLastPosition(ServerPlayer player) {
-        Identifier dimension = player.level().dimension().identifier();
-        lastPositions.put(player.getUUID(), new Home.Position(
-                player.getX(), player.getY(), player.getZ(),
-                player.getXRot(), player.getYRot(), dimension
-        ));
-    }
-//邀请系统
+    //邀请系统
     private static final Map<String, Long> inviteCooldowns = new ConcurrentHashMap<>();
     private static final Map<UUID, List<InviteRequest>> pendingInvites = new ConcurrentHashMap<>();
 
@@ -319,10 +309,13 @@ public class HomeHandler {
     // Tab补全：玩家自己的家
     private static final SuggestionProvider<CommandSourceStack> OWN_HOME_SUGGESTIONS = (context, builder) -> {
         ServerPlayer player = context.getSource().getPlayerOrException();
+        String remaining = builder.getRemaining().toLowerCase();
         Map<String, Home> homes = playerHomes.get(player.getUUID());
         if (homes != null) {
             for (String homeName : homes.keySet()) {
-                builder.suggest(homeName);
+                if (homeName.toLowerCase().startsWith(remaining)) {
+                    builder.suggest(homeName);
+                }
             }
         }
         return builder.buildFuture();
@@ -331,11 +324,14 @@ public class HomeHandler {
     private static final SuggestionProvider<CommandSourceStack> PUBLIC_HOME_SUGGESTIONS = (context, builder) -> {
         try {
             ServerPlayer player = context.getSource().getPlayerOrException();
+            String remaining = builder.getRemaining().toLowerCase();
             Map<String, PublicHomeInfo> ownerPublicHomes = publicHomesByOwner.get(player.getUUID().toString());
 
             if (ownerPublicHomes != null) {
                 for (String homeName : ownerPublicHomes.keySet()) {
-                    builder.suggest(homeName);
+                    if (homeName.toLowerCase().startsWith(remaining)) {
+                        builder.suggest(homeName);
+                    }
                 }
             }
             return builder.buildFuture();
@@ -348,14 +344,16 @@ public class HomeHandler {
     private static final SuggestionProvider<CommandSourceStack> NON_PUBLIC_HOME_SUGGESTIONS = (context, builder) -> {
         try {
             ServerPlayer player = context.getSource().getPlayerOrException();
+            String remaining = builder.getRemaining().toLowerCase();
             Map<String, Home> homes = playerHomes.get(player.getUUID());
             Map<String, PublicHomeInfo> ownerPublicHomes = publicHomesByOwner.get(player.getUUID().toString());
 
             if (homes != null) {
                 for (String homeName : homes.keySet()) {
-                    // 检查家园是否不是公开的
                     if (ownerPublicHomes == null || !ownerPublicHomes.containsKey(homeName)) {
-                        builder.suggest(homeName);
+                        if (homeName.toLowerCase().startsWith(remaining)) {
+                            builder.suggest(homeName);
+                        }
                     }
                 }
             }
@@ -369,10 +367,13 @@ public class HomeHandler {
     private static final SuggestionProvider<CommandSourceStack> ACCESSIBLE_HOME_SUGGESTIONS = (context, builder) -> {
         try {
             ServerPlayer player = context.getSource().getPlayerOrException();
+            String remaining = builder.getRemaining().toLowerCase();
             Map<String, Home> homes = playerHomes.get(player.getUUID());
             if (homes != null) {
                 for (String homeName : homes.keySet()) {
-                    builder.suggest(homeName);
+                    if (homeName.toLowerCase().startsWith(remaining)) {
+                        builder.suggest(homeName);
+                    }
                 }
             }
             return builder.buildFuture();
@@ -425,8 +426,13 @@ public class HomeHandler {
 
     // Tab补全：/home sharelist 的 in/out 参数
     private static final SuggestionProvider<CommandSourceStack> SHARELIST_SUGGESTIONS = (context, builder) -> {
-        builder.suggest("in");
-        builder.suggest("out");
+        String remaining = builder.getRemaining().toLowerCase();
+        if ("in".startsWith(remaining)) {
+            builder.suggest("in");
+        }
+        if ("out".startsWith(remaining)) {
+            builder.suggest("out");
+        }
         return builder.buildFuture();
     };
 
@@ -464,7 +470,17 @@ public class HomeHandler {
                         .then(Commands.literal("tp")
                                 .then(Commands.argument("name", StringArgumentType.string())
                                         .suggests(ACCESSIBLE_HOME_SUGGESTIONS)
-                                        .executes(context -> teleportToHome(context.getSource().getPlayerOrException(), StringArgumentType.getString(context, "name")))))
+                                        .executes(context -> {
+                                            ServerPlayer player = context.getSource().getPlayerOrException();
+                                            String homeName = StringArgumentType.getString(context, "name");
+
+                                            if (!validateHomeExists(player, homeName)) {
+                                                return 0;
+                                            }
+
+                                            TeleportDelayManager.requestTeleport(player, () -> teleportToHome(player, homeName));
+                                            return 1;
+                                        })))
                         .then(Commands.literal("set")
                                 .then(Commands.argument("name", StringArgumentType.string())
                                         .executes(context -> setHome(context.getSource().getPlayerOrException(), StringArgumentType.getString(context, "name")))))
@@ -515,7 +531,17 @@ public class HomeHandler {
                         .then(Commands.literal("otherhome")
                                 .then(Commands.argument("home", StringArgumentType.greedyString())
                                         .suggests(OTHER_HOME_SUGGESTIONS)
-                                        .executes(context -> teleportToOtherHome(context.getSource().getPlayerOrException(), StringArgumentType.getString(context, "home")))))
+                                        .executes(context -> {
+                                            ServerPlayer player = context.getSource().getPlayerOrException();
+                                            String homeArg = StringArgumentType.getString(context, "home");
+
+                                            if (!validateOtherHomeExists(player, homeArg)) {
+                                                return 0;
+                                            }
+
+                                            TeleportDelayManager.requestTeleport(player, () -> teleportToOtherHome(player, homeArg));
+                                            return 1;
+                                        })))
                         .then(Commands.literal("otherlist")
                                 .executes(context -> {
                                     ServerPlayer player = context.getSource().getPlayerOrException();
@@ -682,7 +708,7 @@ public class HomeHandler {
                     home.position.x, home.position.y, home.position.z);
             return 1;
         }
-        return teleportToOtherHome(player, name); // 尝试作为他人家处理
+        return teleportToOtherHome(player, name);
     }
 
 
@@ -950,8 +976,7 @@ public class HomeHandler {
                 ));
                 return 0;
             }
-
-            recordLastPosition(player);
+            BackHandler.recordPosition(player);
             double teleX = home.position.x;
             double teleY = home.position.y;
             double teleZ = home.position.z;
@@ -1171,6 +1196,7 @@ public class HomeHandler {
             return 0;
         }
 
+        BackHandler.recordPosition(receiver);
         teleportPlayer(receiver, senderHome.position.x, senderHome.position.y, senderHome.position.z, senderHome.position.dimension);
 
         // 移除邀请
@@ -1319,7 +1345,94 @@ public class HomeHandler {
         }
     }
 
-    public static void onServerStopping() {
-        scheduler.shutdown();
+    private static boolean validateHomeExists(ServerPlayer player, String homeName) {
+        Map<String, Home> homes = playerHomes.get(player.getUUID());
+        if (homes != null && homes.containsKey(homeName)) {
+            Home home = homes.get(homeName);
+            ResourceKey<Level> dimensionKey = ResourceKey.create(Registries.DIMENSION, home.position.dimension);
+            ServerLevel targetLevel = player.level().getServer().getLevel(dimensionKey);
+            if (targetLevel == null) {
+                player.sendSystemMessage(ModUtils.translateWithFallback(
+                        "command.tpatool.home.invalid_dimension",
+                        "Invalid dimension for home %s!",
+                        homeName
+                ));
+                return false;
+            }
+            return true;
+        }
+        player.sendSystemMessage(ModUtils.translateWithFallback(
+                "command.tpatool.home.not_found",
+                "Home %s not found!",
+                homeName
+        ));
+        return false;
     }
+    private static boolean validateOtherHomeExists(ServerPlayer player, String homeArg) {
+        try {
+            String[] parts = homeArg.split(":", 2);
+            if (parts.length != 2) {
+                player.sendSystemMessage(ModUtils.translateWithFallback(
+                        "command.tpatool.home.invalid_format",
+                        "Invalid format! Use playername:homename."
+                ));
+                return false;
+            }
+            String ownerName = parts[0];
+            String homeName = parts[1];
+            Optional<NameAndId> id = player.level().getServer().services().nameToIdCache().get(ownerName);
+            if (id.isEmpty()) {
+                player.sendSystemMessage(ModUtils.translateWithFallback(
+                        "command.tpatool.home.other_not_found",
+                        "Home %s not found or not accessible!",
+                        homeArg
+                ));
+                return false;
+            }
+            UUID ownerUUID = id.get().id();
+            Map<String, PublicHomeInfo> ownerPublicHomes = publicHomesByOwner.get(ownerUUID.toString());
+            boolean isPublic = ownerPublicHomes != null && ownerPublicHomes.containsKey(homeName);
+            Map<String, Home> homes = playerHomes.get(ownerUUID);
+            if (homes == null || !homes.containsKey(homeName)) {
+                player.sendSystemMessage(ModUtils.translateWithFallback(
+                        "command.tpatool.home.other_not_found",
+                        "Home %s not found or not accessible!",
+                        homeArg
+                ));
+                return false;
+            }
+            Home home = homes.get(homeName);
+            if (!isPublic && !home.sharedPlayers.contains(player.getUUID())) {
+                player.sendSystemMessage(ModUtils.translateWithFallback(
+                        "command.tpatool.home.other_not_found",
+                        "Home %s not found or not accessible!",
+                        homeArg
+                ));
+                return false;
+            }
+            ResourceKey<Level> dimensionKey = ResourceKey.create(Registries.DIMENSION, home.position.dimension);
+            ServerLevel targetLevel = player.level().getServer().getLevel(dimensionKey);
+            if (targetLevel == null) {
+                player.sendSystemMessage(ModUtils.translateWithFallback(
+                        "command.tpatool.home.invalid_dimension",
+                        "Invalid dimension for home %s!",
+                        homeArg
+                ));
+                return false;
+            }
+            return true;
+        } catch (Exception e) {
+            ModConfigs.DebugLog.error("Error validating other home {}: {}", homeArg, e.getMessage());
+            player.sendSystemMessage(ModUtils.translateWithFallback(
+                    "command.tpatool.home.validation_error",
+                    "Error validating home!"
+            ));
+            return false;
+        }
+    }
+
+
+//    public static void onServerStopping() {
+//        scheduler.shutdown();
+//    }
 }

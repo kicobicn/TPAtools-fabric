@@ -2,6 +2,7 @@ package com.kicobicn.TPATools.Commands;
 
 import com.kicobicn.TPATools.config.ModConfigs;
 import com.kicobicn.TPATools.util.ModUtils;
+import com.kicobicn.TPATools.util.TeleportDelayManager;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
@@ -30,7 +31,13 @@ public class RTPHandler {
                         .executes(context -> {
                             try {
                                 ServerPlayer player = context.getSource().getPlayerOrException();
-                                return executeRTP(player);
+
+                                if (!validateRTPCooldown(player)) {
+                                    return 0;
+                                }
+
+                                TeleportDelayManager.requestTeleport(player, () -> executeRTP(player));
+                                return 1;
                             } catch (Exception e) {
                                 ModConfigs.DebugLog.error("Unexpected error in /rtp: ", e);
                                 context.getSource().sendFailure(Component.literal("An unexpected error occurred."));
@@ -82,6 +89,7 @@ public class RTPHandler {
             return 0;
         }
 
+        BackHandler.recordPosition(player);
         // 传送玩家
         player.teleportTo(world, safePos.getX() + 0.5, safePos.getY() + 1, safePos.getZ() + 0.5, 
                           Set.of(), player.getYRot(), player.getXRot(), false);
@@ -228,4 +236,22 @@ public class RTPHandler {
     public static Map<UUID, Long> getCooldowns() {
         return new HashMap<>(rtpCooldowns);
     }
+
+    //检查是否冷却中
+    private static boolean validateRTPCooldown(ServerPlayer player) {
+        UUID playerUUID = player.getUUID();
+        if (isOnCooldown(playerUUID)) {
+            long remainingTime = getRemainingCooldown(playerUUID);
+            player.sendSystemMessage(
+                    ModUtils.translateWithFallback(
+                            "command.tpatool.rtp.cooldown",
+                            "RTP is on cooldown. Please wait %d seconds.",
+                            remainingTime
+                    )
+            );
+            return false;
+        }
+        return true;
+    }
+
 }

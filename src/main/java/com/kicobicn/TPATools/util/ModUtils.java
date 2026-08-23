@@ -314,6 +314,8 @@ public class ModUtils {
     }
 
     public static void tick() {
+        TeleportDelayManager.tick();
+
         List<UUID> toRemove = new ArrayList<>();
         for (Map.Entry<UUID, List<TPAHandler.TPARequest>> entry : TPAHandler.requests.entrySet()) {
             Iterator<TPAHandler.TPARequest> iterator = entry.getValue().iterator();

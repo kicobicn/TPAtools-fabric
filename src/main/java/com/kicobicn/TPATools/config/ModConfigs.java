@@ -57,6 +57,8 @@ public class ModConfigs {
     private static int timeoutTicks = 30 * 20;
     private static String defaultLanguage = "zh_cn";
     private static boolean safeTeleport = true;
+    private static boolean teleportNeedTime = false;
+    private static int teleportDelayTime = 3;
 
     // ==================== Getters ====================
     public static int getWaitSeconds() { return waitSeconds; }
@@ -81,6 +83,8 @@ public class ModConfigs {
     public static String getDefaultLanguage() { return defaultLanguage; }
     public static boolean isDebugEnabled() { return debugMode; }
     public static boolean isSafeTeleport() { return safeTeleport; }
+    public static boolean isTeleportNeedTime() { return teleportNeedTime; }
+    public static int getTeleportDelayTime() { return teleportDelayTime; }
 
     // ==================== Setters ====================
     public static void setWaitSeconds(int v) { waitSeconds = v; saveConfigValues(); }
@@ -95,6 +99,8 @@ public class ModConfigs {
     public static void setCooldownTime(long v) { cooldownTime = v; saveConfigValues(); }
     public static void setDefaultLanguage(String v) { defaultLanguage = v; saveConfigValues(); }
     public static void setSafeTeleport(boolean v) { safeTeleport = v; saveConfigValues(); }
+    public static void setTeleportNeedTime(boolean v) { teleportNeedTime = v; saveConfigValues(); }
+    public static void setTeleportDelayTime(int v) { teleportDelayTime = v; saveConfigValues(); }
 
     // 服务器实例
     private static MinecraftServer server;
@@ -155,6 +161,8 @@ public class ModConfigs {
     };
 
     private static final SuggestionProvider<CommandSourceStack> TIME_SUGGESTIONS = (context, builder) -> {
+        builder.suggest("3");
+        builder.suggest("5");
         builder.suggest("10");
         builder.suggest("30");
         builder.suggest("60");
@@ -209,6 +217,8 @@ public class ModConfigs {
             if (data.timeoutTicks != null) timeoutTicks = data.timeoutTicks;
             if (data.safeTeleport != null) safeTeleport = data.safeTeleport;
             if (data.defaultLanguage != null) defaultLanguage = data.defaultLanguage;
+            if (data.teleportNeedTime != null) teleportNeedTime = data.teleportNeedTime;
+            if (data.teleportDelaySeconds != null) teleportDelayTime = data.teleportDelaySeconds;
             DebugLog.info("Config loaded from {}", configFile);
         } catch (Exception e) {
             LOGGER.error("Failed to load config: {}", e.getMessage());
@@ -240,6 +250,9 @@ public class ModConfigs {
         data.timeoutTicks = timeoutTicks;
         data.safeTeleport = safeTeleport;
         data.defaultLanguage = defaultLanguage;
+        data.teleportNeedTime = teleportNeedTime;
+        data.teleportDelaySeconds = teleportDelayTime;
+
         try (Writer writer = Files.newBufferedWriter(getConfigFile())) {
             CONFIG_GSON.toJson(data, writer);
         } catch (Exception e) {
@@ -271,6 +284,8 @@ public class ModConfigs {
         Integer timeoutTicks;
         Boolean safeTeleport;
         String defaultLanguage;
+        Boolean teleportNeedTime;
+        Integer teleportDelaySeconds;
     }
 
     public static class DebugLog {
@@ -557,6 +572,51 @@ public class ModConfigs {
                                                             true
                                                     );
                                                     DebugLog.info("RTP cooldown time set to {} seconds by {}",
+                                                            time, context.getSource().getDisplayName().getString());
+                                                    return 1;
+                                                })))
+                                .then(Commands.literal("teleportneedtime")
+                                        .executes(context -> {
+                                            ServerPlayer player = context.getSource().getPlayerOrException();
+                                            ModChatMenus.ConfigMenus.showTeleportNeedTimeMenu(player);
+                                            return 1;
+                                        })
+                                        .then(Commands.argument("enable", StringArgumentType.string())
+                                                .suggests(BOOLEAN_SUGGESTIONS)
+                                                .executes(context -> {
+                                                    String enableStr = StringArgumentType.getString(context, "enable");
+                                                    boolean enable = enableStr.equalsIgnoreCase("true");
+                                                    setTeleportNeedTime(enable);
+                                                    context.getSource().sendSuccess(
+                                                            () -> ModUtils.translateWithFallback(
+                                                                    enable ? "command.tpatool.config.teleportneedtime.enabled" : "command.tpatool.config.teleportneedtime.disabled",
+                                                                    enable ? "Teleport delay enabled. Players must stand still before teleporting." : "Teleport delay disabled. Players will teleport immediately."
+                                                            ),
+                                                            true
+                                                    );
+                                                    DebugLog.info("Teleport delay {} by {}", enable ? "enabled" : "disabled", context.getSource().getDisplayName().getString());
+                                                    return 1;
+                                                })))
+                                .then(Commands.literal("teleportdelaytime")
+                                        .executes(context -> {
+                                            ServerPlayer player = context.getSource().getPlayerOrException();
+                                            ModChatMenus.ConfigMenus.showTeleportDelayTimeMenu(player);
+                                            return 1;
+                                        })
+                                        .then(Commands.argument("time", IntegerArgumentType.integer(1))
+                                                .suggests(TIME_SUGGESTIONS)
+                                                .executes(context -> {
+                                                    int time = IntegerArgumentType.getInteger(context, "time");
+                                                    setTeleportDelayTime(time);
+                                                    context.getSource().sendSuccess(
+                                                            () -> ModUtils.translateWithFallback(
+                                                                    "command.tpatool.config.teleportdelaytime.success",
+                                                                    "Teleport delay time set to %d seconds.",
+                                                                    time
+                                                            ),
+                                                            true
+                                                    );
+                                                    DebugLog.info("Teleport delay time set to {} seconds by {}",
                                                             time, context.getSource().getDisplayName().getString());
                                                     return 1;
                                                 })))

@@ -2,6 +2,7 @@ package com.kicobicn.TPATools.Commands;
 
 import com.kicobicn.TPATools.config.ModConfigs;
 import com.kicobicn.TPATools.util.ModUtils;
+import com.kicobicn.TPATools.util.TeleportDelayManager;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -46,7 +47,13 @@ public class BackHandler {
                             try {
                                 ServerPlayer player = context.getSource().getPlayerOrException();
                                 ModConfigs.DebugLog.info("Executing /back command for player: {}", player.getName().getString());
-                                return teleportBack(player);
+
+                                if (!validatePreviousPosition(player)) {
+                                    return 0;
+                                }
+
+                                TeleportDelayManager.requestTeleport(player, () -> teleportBack(player));
+                                return 1;
                             } catch (Exception e) {
                                 ModConfigs.DebugLog.error("Unexpected error in /back command: ", e);
                                 context.getSource().sendFailure(Component.literal("An unexpected error occurred."));
@@ -103,4 +110,27 @@ public class BackHandler {
                 player.getName().getString(), pos.dimension, pos.x, pos.y, pos.z);
         return 1;
     }
+
+    private static boolean validatePreviousPosition(ServerPlayer player) {
+        PlayerPosition pos = previousPositions.get(player.getUUID());
+        if (pos == null) {
+            player.sendSystemMessage(ModUtils.translateWithFallback(
+                    "command.tpatool.back.no_position",
+                    "No previous position recorded!"
+            ));
+            return false;
+        }
+        MinecraftServer server = player.level().getServer();
+        ServerLevel level = server.getLevel(ResourceKey.create(Registries.DIMENSION, pos.dimension));
+        if (level == null) {
+            player.sendSystemMessage(ModUtils.translateWithFallback(
+                    "command.tpatool.back.invalid_dimension",
+                    "Invalid dimension for previous position!"
+            ));
+            previousPositions.remove(player.getUUID());
+            return false;
+        }
+        return true;
+    }
+
 }

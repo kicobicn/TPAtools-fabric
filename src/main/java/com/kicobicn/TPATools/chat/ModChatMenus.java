@@ -15,17 +15,6 @@ import java.util.*;
 
 public class ModChatMenus {
 
-//    // UI状态类
-//    private static class UIState {
-//        String currentMenu;
-//        List<String> menuData;
-//
-//        public UIState(String currentMenu, List<String> menuData) {
-//            this.currentMenu = currentMenu;
-//            this.menuData = menuData;
-//        }
-//    }
-
     public static class HomeMenus {
 
         public static void showHomeMenu(ServerPlayer player) {
@@ -646,7 +635,7 @@ public class ModChatMenus {
             menu.append(createI18nButton("menu.tpatools.config.button.setmaxhome",
                             "menu.tpatools.config.hover.setmaxhome",
                             "/tpatools configs setmaxhome ",
-                            ChatFormatting.GRAY,
+                            ChatFormatting.AQUA,
                             false))
                     .append(Component.literal("\n"));
 
@@ -712,7 +701,7 @@ public class ModChatMenus {
             menu.append(createI18nButton("menu.tpatools.config.button.tpawaittime",
                             "menu.tpatools.config.hover.tpawaittime",
                             "/tpatools configs tpawaittime ",
-                            ChatFormatting.GRAY,
+                            ChatFormatting.AQUA,
                             false))
                     .append(Component.literal("\n"));
 
@@ -747,7 +736,7 @@ public class ModChatMenus {
             menu.append(createI18nButton("menu.tpatools.config.button.tpacdtime",
                             "menu.tpatools.config.hover.tpacdtime",
                             "/tpatools configs tpacdtime ",
-                            ChatFormatting.GRAY,
+                            ChatFormatting.AQUA,
                             false))
                     .append(Component.literal("\n"));
 
@@ -782,7 +771,7 @@ public class ModChatMenus {
             menu.append(createI18nButton("menu.tpatools.config.button.homeinvitecdtime",
                             "menu.tpatools.config.hover.homeinvitecdtime",
                             "/tpatools configs homeinvitecdtime ",
-                            ChatFormatting.GRAY,
+                            ChatFormatting.AQUA,
                             false))
                     .append(Component.literal("\n"));
 
@@ -817,7 +806,7 @@ public class ModChatMenus {
             menu.append(createI18nButton("menu.tpatools.config.button.homeinviteovertime",
                             "menu.tpatools.config.hover.homeinviteovertime",
                             "/tpatools configs homeinviteovertime ",
-                            ChatFormatting.GRAY,
+                            ChatFormatting.AQUA,
                             false))
                     .append(Component.literal("\n"));
 
@@ -885,7 +874,7 @@ public class ModChatMenus {
             menu.append(createI18nButton("menu.tpatools.config.button.rtpscope_custom",
                             "menu.tpatools.config.hover.rtpscope",
                             "/tpatools configs rtpscope ",
-                            ChatFormatting.GRAY,
+                            ChatFormatting.AQUA,
                             false))
                     .append(Component.literal("\n"));
 
@@ -917,7 +906,7 @@ public class ModChatMenus {
             menu.append(createI18nButton("menu.tpatools.config.button.rtpcdtime_custom",
                             "menu.tpatools.config.hover.rtpcdtime",
                             "/tpatools configs rtpcdtime ",
-                            ChatFormatting.GRAY,
+                            ChatFormatting.AQUA,
                             false))
                     .append(Component.literal("\n"));
 
@@ -962,10 +951,44 @@ public class ModChatMenus {
             menu.append(createI18nButton("menu.tpatools.config.button.setmaxwarpcount_custom",
                             "menu.tpatools.config.hover.setmaxwarpcount",
                             "/tpatools configs setmaxwarpcount ",
-                            ChatFormatting.GRAY,
+                            ChatFormatting.AQUA,
                             false))
                     .append(Component.literal("\n"));
 
+            menu.append(ModUtils.translateWithFallback("menu.tpatools.config.branch.teleportneedtime", "- Teleport Need Time (teleportneedtime)\n")
+                    .withStyle(ChatFormatting.WHITE));
+            boolean teleportNeedTime = ModConfigs.isTeleportNeedTime();
+            ChatFormatting teleportNeedTimeColor = teleportNeedTime ? ChatFormatting.GREEN : ChatFormatting.GRAY;
+            menu.append(createI18nButton(teleportNeedTime ? "menu.tpatools.config.button.teleportneedtime_true" : "menu.tpatools.config.button.teleportneedtime_false",
+                    "menu.tpatools.config.hover.teleportneedtime",
+                    "/tpatools configs teleportneedtime " + (!teleportNeedTime),
+                    teleportNeedTimeColor,
+                    true))
+                    .append(Component.literal("\n"));
+
+            menu.append(ModUtils.translateWithFallback("menu.tpatools.config.branch.teleportdelaytime", "- Teleport Delay Time (teleportdelaytime)\n")
+                    .withStyle(ChatFormatting.WHITE));
+            int teleportDelayTime = ModConfigs.getTeleportDelayTime();
+            ChatFormatting teleportDelayTimeColor = teleportDelayTime == 3 ? ChatFormatting.GREEN : ChatFormatting.GRAY;
+            menu.append(createI18nButton("menu.tpatools.config.button.teleportdelaytime_3",
+                    "menu.tpatools.config.hover.teleportdelaytime",
+                    "/tpatools configs teleportdelaytime 3",
+                    teleportDelayTimeColor,
+                    true))
+                    .append(Component.literal(" "));
+            teleportDelayTimeColor = teleportDelayTime == 5 ? ChatFormatting.GREEN : ChatFormatting.GRAY;
+            menu.append(createI18nButton("menu.tpatools.config.button.teleportdelaytime_5",
+                    "menu.tpatools.config.hover.teleportdelaytime",
+                    "/tpatools configs teleportdelaytime 5",
+                    teleportDelayTimeColor,
+                    true))
+                    .append(Component.literal(" "));
+            menu.append(createI18nButton("menu.tpatools.config.button.teleportdelaytime_custom",
+                    "menu.tpatools.config.hover.teleportdelaytime",
+                    "/tpatools configs teleportdelaytime ",
+                    ChatFormatting.AQUA,
+                    false))
+                    .append(Component.literal("\n"));
 
             menu.append(ModUtils.translateWithFallback("menu.tpatools.config.branch.debug", "- Debug Mode (debug)\n")
                     .withStyle(ChatFormatting.WHITE));
@@ -1570,6 +1593,52 @@ public class ModChatMenus {
                     .withStyle(ChatFormatting.GOLD));
 
             player.sendSystemMessage(menu);
+        }
+
+        public static void showTeleportNeedTimeMenu(ServerPlayer player) {
+            MutableComponent menu = Component.literal("");
+
+            boolean teleportNeedTime = ModConfigs.isTeleportNeedTime();
+            ChatFormatting teleportNeedTimeColor = teleportNeedTime ? ChatFormatting.GREEN : ChatFormatting.RED;
+            menu.append(ModUtils.translateWithFallback("menu.tpatools.config.tips.teleportneedtime",
+                                    "This setting controls whether to teleport ridden entities with players when using /tpa.\n")
+                            .withStyle(ChatFormatting.WHITE))
+                    .append(ModUtils.translateWithFallback("menu.tpatools.config.default.teleportneedtime",
+                                    "- Default: false (currently set to %s)", teleportNeedTime)
+                            .withStyle(ChatFormatting.GRAY))
+                    .append(createI18nButton(teleportNeedTime ? "menu.tpatools.config.button.teleportneedtime_true" : "menu.tpatools.config.button.teleportneedtime_false",
+                            "menu.tpatools.config.hover.teleportneedtime",
+                            "/tpatools configs teleportneedtime " + (!teleportNeedTime),
+                            teleportNeedTimeColor,
+                            true));
+
+            menu.append(Component.literal("\n=============================\n")
+                    .withStyle(ChatFormatting.GOLD));
+
+            player.sendSystemMessage(menu);
+        }
+
+        public static void showTeleportDelayTimeMenu(ServerPlayer player) {
+            MutableComponent menu = Component.literal("");
+
+            int teleportDelayTime = ModConfigs.getTeleportDelayTime();
+            menu.append(createI18nButton("menu.tpatools.config.button.teleportdelaytime_3",
+                            "menu.tpatools.config.hover.teleportdelaytime",
+                            "/tpatools configs teleportdelaytime 3",
+                            3 == teleportDelayTime ? ChatFormatting.GREEN : ChatFormatting.GRAY,
+                            true))
+                    .append(Component.literal(" "))
+                    .append(createI18nButton("menu.tpatools.config.button.teleportdelaytime_5",
+                            "menu.tpatools.config.hover.teleportdelaytime",
+                            "/tpatools configs teleportdelaytime 5",
+                            5 == teleportDelayTime ? ChatFormatting.GREEN : ChatFormatting.GRAY,
+                            true))
+                    .append(Component.literal(" "))
+                    .append(createI18nButton("menu.tpatools.config.button.teleportdelaytime_custom",
+                            "menu.tpatools.config.hover.teleportdelaytime",
+                            "/tpatools configs teleportdelaytime ",
+                            ChatFormatting.GRAY,
+                            false));
         }
     }
 

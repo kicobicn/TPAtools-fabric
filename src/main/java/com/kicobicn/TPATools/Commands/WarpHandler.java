@@ -7,7 +7,9 @@ import com.kicobicn.TPATools.chat.ModChatMenus;
 import com.kicobicn.TPATools.config.ModConfigs;
 import com.kicobicn.TPATools.database.DatabaseManager;
 import com.kicobicn.TPATools.util.ModUtils;
+import com.kicobicn.TPATools.util.TeleportDelayManager;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
@@ -138,8 +140,11 @@ public class WarpHandler {
     
     // Tab补全：warp 点名称
     private static final SuggestionProvider<CommandSourceStack> WARP_SUGGESTIONS = (context, builder) -> {
+        String remaining = builder.getRemaining().toLowerCase();
         for (String warpName : warpPoints.keySet()) {
-            builder.suggest(warpName);
+            if (warpName.toLowerCase().startsWith(remaining)) {
+                builder.suggest(warpName);
+            }
         }
         return builder.buildFuture();
     };
@@ -179,7 +184,12 @@ public class WarpHandler {
                                             try {
                                                 ServerPlayer player = context.getSource().getPlayerOrException();
                                                 String name = StringArgumentType.getString(context, "name");
-                                                return teleportToWarp(player, name);
+                                                if (!validateWarpExists(player, name)) {
+                                                    return 0;
+                                                }
+
+                                                TeleportDelayManager.requestTeleport(player, () -> teleportToWarp(player, name));
+                                                return 1;
                                             } catch (CommandSyntaxException e) {
                                                 ModConfigs.DebugLog.error("Failed to parse /warp tp: {}", e.getMessage());
                                                 context.getSource().sendFailure(Component.literal("Invalid warp name."));
@@ -195,7 +205,15 @@ public class WarpHandler {
                                     ServerPlayer player = context.getSource().getPlayerOrException();
                                     ModChatMenus.showWarpList(player, 0);
                                     return 1;
-                                }))
+                                })
+                                .then(Commands.literal("page")
+                                        .then(Commands.argument("page", IntegerArgumentType.integer(0))
+                                                .executes(context -> {
+                                                    ServerPlayer player = context.getSource().getPlayerOrException();
+                                                    int page = IntegerArgumentType.getInteger(context, "page");
+                                                    ModChatMenus.showWarpList(player, page);
+                                                    return 1;
+                                                }))))
                         .then(Commands.literal("remove")
                                 .requires(source -> Commands.LEVEL_GAMEMASTERS.check(source.permissions()))
                                 .then(Commands.argument("name", StringArgumentType.string())
@@ -296,4 +314,17 @@ public class WarpHandler {
         ModConfigs.DebugLog.info("Player {} removed warp point {}", player.getName().getString(), name);
         return 1;
     }
+
+    private static boolean validateWarpExists(ServerPlayer player, String name) {
+        if (!warpPoints.containsKey(name)) {
+            player.sendSystemMessage(ModUtils.translateWithFallback(
+                    "command.tpatool.warp.not_found",
+                    "Warp point '%s' not found!",
+                    name
+            ));
+            return false;
+        }
+        return true;
+    }
+
 }
