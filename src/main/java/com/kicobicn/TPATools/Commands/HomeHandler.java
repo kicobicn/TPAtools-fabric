@@ -151,7 +151,7 @@ public class HomeHandler {
                         String ownerName = rs.getString("player_name");
                         String homeName = rs.getString("home_name");
 
-                        publicHomesByOwner.computeIfAbsent(ownerName, k -> new HashMap<>())
+                        publicHomesByOwner.computeIfAbsent(ownerUUID.toString(), k -> new HashMap<>())
                                 .put(homeName, new PublicHomeInfo(ownerUUID, ownerName, homeName));
                     }
                 }
@@ -243,14 +243,12 @@ public class HomeHandler {
 
                     // 保存公开家园
                     for (Map.Entry<String, Map<String, PublicHomeInfo>> ownerEntry : publicHomesByOwner.entrySet()) {
-                        String ownerName = ownerEntry.getKey();
-
                         for (Map.Entry<String, PublicHomeInfo> homeEntry : ownerEntry.getValue().entrySet()) {
                             String homeName = homeEntry.getKey();
                             PublicHomeInfo info = homeEntry.getValue();
 
                             publicStmt.setString(1, info.ownerUUID.toString());
-                            publicStmt.setString(2, ownerName);
+                            publicStmt.setString(2, info.ownerName);
                             publicStmt.setString(3, homeName);
                             publicStmt.addBatch();
                         }

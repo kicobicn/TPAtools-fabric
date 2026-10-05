@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import com.kicobicn.TPATools.config.ModConfigs;
 import com.kicobicn.TPATools.database.DatabaseManager;
 import com.kicobicn.TPATools.util.ModUtils;
+import com.kicobicn.TPATools.util.TeleportDelayManager;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.ChatFormatting;
@@ -463,22 +464,25 @@ public class TPAHandler {
             return 0;
         }
         BackHandler.recordPosition(request.isTPHere ? target : request.sender);
-        if (request.isTPHere) {
-            // 使用新的骑乘链传送方法
-            ModUtils.teleportWithAllChains(
-                    target,
-                    request.sender.level(),
-                    request.sender.getX(), request.sender.getY(), request.sender.getZ(),
-                    request.sender.getYRot(), request.sender.getXRot()
-            );
-        } else {
-            ModUtils.teleportWithAllChains(
-                    request.sender,
-                    target.level(),
-                    target.getX(), target.getY(), target.getZ(),
-                    target.getYRot(), target.getXRot()
-            );
-        }
+        Runnable teleportAction = () -> {
+            if (request.isTPHere) {
+                ModUtils.teleportWithAllChains(
+                        target,
+                        request.sender.level(),
+                        request.sender.getX(), request.sender.getY(), request.sender.getZ(),
+                        request.sender.getYRot(), request.sender.getXRot()
+                );
+            } else {
+                ModUtils.teleportWithAllChains(
+                        request.sender,
+                        target.level(),
+                        target.getX(), target.getY(), target.getZ(),
+                        target.getYRot(), target.getXRot()
+                );
+            }
+        };
+        ServerPlayer teleportingPlayer = request.isTPHere ? target : request.sender;
+        TeleportDelayManager.requestTeleport(teleportingPlayer, teleportAction);
         target.sendSystemMessage(translateWithFallback(
                 request.isTPHere ? "command.tpatool.tpahere.accepted" : "command.tpatool.tpa.accepted",
                 request.isTPHere ? "Accepted teleport request to %s." : "Accepted teleport request from %s.",

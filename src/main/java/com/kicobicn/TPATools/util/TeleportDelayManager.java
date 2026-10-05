@@ -79,7 +79,7 @@ public class TeleportDelayManager {
     }
 
     public static void requestTeleport(ServerPlayer player, Runnable teleportAction) {
-        if (!ModConfigs.isTeleportNeedTime()) {
+        if (!ModConfigs.isTeleportNeedTime() || player.isCreative()) {
             teleportAction.run();
             return;
         }
