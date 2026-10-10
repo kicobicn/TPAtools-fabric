@@ -157,7 +157,7 @@ public class RTPHandler {
         }
         
         // 检查当前位置是否可站立（非液体、非危险方块）
-        if (!blockBelow.blocksMotion() || blockBelow.is(Blocks.LAVA) || 
+        if (!blockBelow.isCollisionShapeFullBlock(world, pos) || blockBelow.is(Blocks.LAVA) ||
             blockBelow.is(Blocks.MAGMA_BLOCK) || blockBelow.is(Blocks.FIRE) ||
             blockBelow.is(Blocks.SOUL_FIRE) || blockBelow.is(Blocks.CACTUS) ||
                 blockBelow.is(Blocks.BEDROCK) || blockBelow.is(Blocks.WATER) ||

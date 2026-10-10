@@ -271,7 +271,7 @@ public class ModUtils {
         }
 
         // 脚下方块必须能站立（有碰撞体积）
-        if (!belowBlock.blocksMotion()) {
+        if (!belowBlock.isCollisionShapeFullBlock(level, pos)) {
             return false;
         }
 
@@ -289,7 +289,7 @@ public class ModUtils {
      * 雪花、地毯等薄层不会被判定为阻挡
      */
     private static boolean isFullBlocking(ServerLevel level, BlockPos pos, BlockState state) {
-        if (!state.blocksMotion()) return false;
+        if (!state.isCollisionShapeFullBlock(level, pos)) return false;
         VoxelShape shape = state.getCollisionShape(level, pos);
         if (shape.isEmpty()) return false;
         // 碰撞体积最大高度 >= 0.5 格才视为有效阻挡

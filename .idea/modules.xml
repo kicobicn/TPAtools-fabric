@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/TPAtools-fabric.client.iml" filepath="$PROJECT_DIR$/.idea/modules/TPAtools-fabric.client.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/TPAtools-fabric.main.iml" filepath="$PROJECT_DIR$/.idea/modules/TPAtools-fabric.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/TPAtools-fabric.test.iml" filepath="$PROJECT_DIR$/.idea/modules/TPAtools-fabric.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.kicobicn.TPAtools-fabric.client.iml" filepath="$PROJECT_DIR$/.idea/modules/com.kicobicn.TPAtools-fabric.client.iml" />
     </modules>
   </component>
 </project>
