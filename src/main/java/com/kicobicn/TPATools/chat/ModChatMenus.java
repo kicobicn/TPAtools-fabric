@@ -71,7 +71,7 @@ public class ModChatMenus {
             Map<String, HomeHandler.Home> homes = HomeHandler.playerHomes.get(player.getUUID());
             if (homes == null || homes.isEmpty()) {
                 player.sendSystemMessage(ModUtils.translateWithFallback(
-                        "command.tpatool.home.list_empty", "You have no homes set."));
+                        "command.tpatools.home.list_empty", "You have no homes set."));
                 return;
             }
 
@@ -193,7 +193,7 @@ public class ModChatMenus {
             Map<String, HomeHandler.Home> homes = HomeHandler.playerHomes.get(player.getUUID());
             if (homes == null || homes.isEmpty()) {
                 player.sendSystemMessage(ModUtils.translateWithFallback(
-                        "command.tpatool.sharelist.out_empty", "You have not shared any homes."));
+                        "command.tpatools.sharelist.out_empty", "You have not shared any homes."));
                 return;
             }
 
@@ -206,7 +206,7 @@ public class ModChatMenus {
 
             if (sharedHomeNames.isEmpty()) {
                 player.sendSystemMessage(ModUtils.translateWithFallback(
-                        "command.tpatool.sharelist.out_empty", "You have not shared any homes."));
+                        "command.tpatools.sharelist.out_empty", "You have not shared any homes."));
                 return;
             }
 
@@ -301,63 +301,84 @@ public class ModChatMenus {
         }
 
         public static void showPublicHomesList(ServerPlayer player, int page) {
-            if (HomeHandler.publicHomesByOwner.isEmpty()) {
-                player.sendSystemMessage(ModUtils.translateWithFallback(
-                        "command.tpatool.home.otherlist_empty", "No public or shared homes available."));
-                return;
-            }
+            List<HomeHandler.PublicHomeInfo> entries = new ArrayList<>();
+            Set<String> seen = new HashSet<>();
 
-            List<HomeHandler.PublicHomeInfo> publicHomes = new ArrayList<>();
-            for (Map.Entry<String, Map<String, HomeHandler.PublicHomeInfo>> ownerEntry : HomeHandler.publicHomesByOwner.entrySet()) {
-                for (HomeHandler.PublicHomeInfo info : ownerEntry.getValue().values()) {
-                    publicHomes.add(info);
+            // 1) 公开的家
+            for (Map<String, HomeHandler.PublicHomeInfo> ownerHomes : HomeHandler.publicHomesByOwner.values()) {
+                for (HomeHandler.PublicHomeInfo info : ownerHomes.values()) {
+                    if (seen.add(info.ownerUUID + ":" + info.homeName)) {
+                        entries.add(info);
+                    }
                 }
             }
 
+            // 2) 别人分享给我的家（此前 otherlist 里看不到）
+            MinecraftServer server = player.level().getServer();
+            for (Map.Entry<UUID, Map<String, HomeHandler.Home>> ownerEntry : HomeHandler.playerHomes.entrySet()) {
+                UUID ownerUUID = ownerEntry.getKey();
+                if (ownerUUID.equals(player.getUUID())) {
+                    continue;
+                }
+                ServerPlayer onlineOwner = server.getPlayerList().getPlayer(ownerUUID);
+                String ownerName = onlineOwner != null
+                        ? onlineOwner.getName().getString()
+                        : ownerUUID.toString().substring(0, 8);
+                for (Map.Entry<String, HomeHandler.Home> homeEntry : ownerEntry.getValue().entrySet()) {
+                    if (!homeEntry.getValue().sharedPlayers.contains(player.getUUID())) {
+                        continue;
+                    }
+                    if (seen.add(ownerUUID + ":" + homeEntry.getKey())) {
+                        entries.add(new HomeHandler.PublicHomeInfo(ownerUUID, ownerName, homeEntry.getKey()));
+                    }
+                }
+            }
+
+            if (entries.isEmpty()) {
+                player.sendSystemMessage(ModUtils.translateWithFallback(
+                        "command.tpatools.home.otherlist_empty", "No public or shared homes available."));
+                return;
+            }
+
             int pageSize = 5;
-            int totalPages = (int) Math.ceil((double) publicHomes.size() / pageSize);
+            int totalPages = (int) Math.ceil((double) entries.size() / pageSize);
             page = Math.max(0, Math.min(page, totalPages - 1));
 
             MutableComponent menu = Component.literal("");
-
-            // 标题
             menu.append(Component.literal("====== TPATools - Home/otherlist ======\n")
                             .withStyle(ChatFormatting.GOLD))
                     .append(ModUtils.translateWithFallback("menu.tpatools.home.title.otherlist", "        - Public Homes Available -\n")
                             .withStyle(ChatFormatting.WHITE))
                     .append(Component.literal("\n"));
 
-            // 显示当前页的公开家
             int startIndex = page * pageSize;
-            int endIndex = Math.min(startIndex + pageSize, publicHomes.size());
+            int endIndex = Math.min(startIndex + pageSize, entries.size());
 
             for (int i = startIndex; i < endIndex; i++) {
-                HomeHandler.PublicHomeInfo info = publicHomes.get(i);
+                HomeHandler.PublicHomeInfo info = entries.get(i);
                 Map<String, HomeHandler.Home> ownerHomes = HomeHandler.playerHomes.get(info.ownerUUID);
-
-                if (ownerHomes != null && ownerHomes.containsKey(info.homeName)) {
-                    HomeHandler.Home home = ownerHomes.get(info.homeName);
-
-                    menu.append(Component.literal("- " + info.homeName + "，拥有者 " + info.ownerName + "\n")
-                            .withStyle(ChatFormatting.WHITE));
-
-                    String position = String.format("%s (x=%.2f, y=%.2f, z=%.2f)",
-                            home.position.dimension, home.position.x, home.position.y, home.position.z);
-                    menu.append(Component.literal("  " + position + "\n")
-                            .withStyle(ChatFormatting.GRAY));
-
-                    // 传送按钮
-                    menu.append(Component.literal("  "))
-                            .append(createI18nButton("menu.tpatools.home.button.teleport",
-                                    "menu.tpatools.home.hover.teleport",
-                                    "/home otherhome " + info.ownerName + ":" + info.homeName,
-                                    ChatFormatting.GREEN,
-                                    true))
-                            .append(Component.literal("\n\n"));
+                if (ownerHomes == null || !ownerHomes.containsKey(info.homeName)) {
+                    continue;
                 }
+                HomeHandler.Home home = ownerHomes.get(info.homeName);
+
+                menu.append(Component.literal("- " + info.homeName + "，拥有者 " + info.ownerName + "\n")
+                        .withStyle(ChatFormatting.WHITE));
+
+                String position = String.format("%s (x=%.2f, y=%.2f, z=%.2f)",
+                        home.position.dimension, home.position.x, home.position.y, home.position.z);
+                menu.append(Component.literal("  " + position + "\n")
+                        .withStyle(ChatFormatting.GRAY));
+
+                menu.append(Component.literal("  "))
+                        .append(createI18nButton("menu.tpatools.home.button.teleport",
+                                "menu.tpatools.home.hover.teleport",
+                                "/home otherhome " + info.ownerName + ":" + info.homeName,
+                                ChatFormatting.GREEN,
+                                true))
+                        .append(Component.literal("\n\n"));
             }
 
-            // 分页系统
             if (totalPages > 1) {
                 menu.append(Component.literal("=============================\n")
                         .withStyle(ChatFormatting.GOLD));
@@ -424,7 +445,7 @@ public class ModChatMenus {
 
             if (sharedHomes.isEmpty()) {
                 player.sendSystemMessage(ModUtils.translateWithFallback(
-                        "command.tpatool.sharelist.in_empty", "No homes are shared with you."));
+                        "command.tpatools.sharelist.in_empty", "No homes are shared with you."));
                 return;
             }
 
@@ -626,7 +647,7 @@ public class ModChatMenus {
 
             color2 = maxHomes == 5 ? ChatFormatting.GREEN : ChatFormatting.GRAY;
             menu.append(createI18nButton("menu.tpatools.config.button.setmaxhome_5",
-                            "menu.tpatools.config.hover.sethomemax",
+                            "menu.tpatools.config.hover.setmaxhome",
                             "/tpatools configs setmaxhome 5",
                             color2,
                             true))
@@ -676,6 +697,24 @@ public class ModChatMenus {
                             "/tpatools configs needop back " + (!ModConfigs.commandPermissions.getOrDefault("back", false)),
                             backColor,
                             true))
+                    .append(Component.literal(" "));
+
+            ChatFormatting warpColor = ModConfigs.commandPermissions.getOrDefault("warp", false) ?
+                    ChatFormatting.GREEN : ChatFormatting.GRAY;
+            menu.append(createI18nButton("menu.tpatools.config.button.needop_warp",
+                            "menu.tpatools.config.hover.needop_warp",
+                            "/tpatools configs needop warp " + (!ModConfigs.commandPermissions.getOrDefault("warp", false)),
+                            warpColor,
+                            true))
+                    .append(Component.literal(" "));
+
+            ChatFormatting rtpColor = ModConfigs.commandPermissions.getOrDefault("rtp", false) ?
+                    ChatFormatting.GREEN : ChatFormatting.GRAY;
+            menu.append(createI18nButton("menu.tpatools.config.button.needop_rtp",
+                            "menu.tpatools.config.hover.needop_rtp",
+                            "/tpatools configs needop rtp " + (!ModConfigs.commandPermissions.getOrDefault("rtp", false)),
+                            rtpColor,
+                            true))
                     .append(Component.literal("\n"));
 
             menu.append(ModUtils.translateWithFallback("menu.tpatools.config.branch.tpawaittime", "- TPA Timeout Duration (tpawaittime)\n")
@@ -684,7 +723,7 @@ public class ModChatMenus {
             int waitTime = ModConfigs.getWaitSeconds();
             ChatFormatting waitColor = waitTime == 30 ? ChatFormatting.GREEN : ChatFormatting.GRAY;
             menu.append(createI18nButton("menu.tpatools.config.button.tpawaittime_30",
-                            "menu.tpatools.home.hover.tpawaittime",
+                            "menu.tpatools.config.hover.tpawaittime",
                             "/tpatools configs tpawaittime 30",
                             waitColor,
                             true))
@@ -692,7 +731,7 @@ public class ModChatMenus {
 
             waitColor = waitTime == 60 ? ChatFormatting.GREEN : ChatFormatting.GRAY;
             menu.append(createI18nButton("menu.tpatools.config.button.tpawaittime_60",
-                            "menu.tpatools.home.hover.tpawaittime",
+                            "menu.tpatools.config.hover.tpawaittime",
                             "/tpatools configs tpawaittime 60",
                             waitColor,
                             true))
@@ -711,7 +750,7 @@ public class ModChatMenus {
             int cdTime = (int) (ModConfigs.getCooldownTime() / 1000);
             ChatFormatting cdColor = cdTime == 0 ? ChatFormatting.GREEN : ChatFormatting.GRAY;
             menu.append(createI18nButton("menu.tpatools.config.button.tpacdtime_0",
-                            "menu.tpatools.home.hover.tpacdtime",
+                            "menu.tpatools.config.hover.tpacdtime",
                             "/tpatools configs tpacdtime 0",
                             cdColor,
                             true))
@@ -719,7 +758,7 @@ public class ModChatMenus {
 
             cdColor = cdTime == 10 ? ChatFormatting.GREEN : ChatFormatting.GRAY;
             menu.append(createI18nButton("menu.tpatools.config.button.tpacdtime_10",
-                            "menu.tpatools.home.hover.tpacdtime",
+                            "menu.tpatools.config.hover.tpacdtime",
                             "/tpatools configs tpacdtime 10",
                             cdColor,
                             true))
@@ -727,7 +766,7 @@ public class ModChatMenus {
 
             cdColor = cdTime == 30 ? ChatFormatting.GREEN : ChatFormatting.GRAY;
             menu.append(createI18nButton("menu.tpatools.config.button.tpacdtime_30",
-                            "menu.tpatools.home.hover.tpacdtime",
+                            "menu.tpatools.config.hover.tpacdtime",
                             "/tpatools configs tpacdtime 30",
                             cdColor,
                             true))
@@ -1146,6 +1185,18 @@ public class ModChatMenus {
                             "menu.tpatools.config.hover.needop_back",
                             "/tpatools configs needop back " + (!ModConfigs.commandPermissions.getOrDefault("back", false)),
                             ModConfigs.commandPermissions.getOrDefault("back", false) ? ChatFormatting.GREEN : ChatFormatting.GRAY,
+                            true))
+                    .append(Component.literal(" "))
+                    .append(createI18nButton("menu.tpatools.config.button.needop_warp",
+                            "menu.tpatools.config.hover.needop_warp",
+                            "/tpatools configs needop warp " + (!ModConfigs.commandPermissions.getOrDefault("warp", false)),
+                            ModConfigs.commandPermissions.getOrDefault("warp", false) ? ChatFormatting.GREEN : ChatFormatting.GRAY,
+                            true))
+                    .append(Component.literal(" "))
+                    .append(createI18nButton("menu.tpatools.config.button.needop_rtp",
+                            "menu.tpatools.config.hover.needop_rtp",
+                            "/tpatools configs needop rtp " + (!ModConfigs.commandPermissions.getOrDefault("rtp", false)),
+                            ModConfigs.commandPermissions.getOrDefault("rtp", false) ? ChatFormatting.GREEN : ChatFormatting.GRAY,
                             true));
 
             // 分割线
@@ -1553,37 +1604,37 @@ public class ModChatMenus {
             int maxWarpCount = ModConfigs.getMaxWarpCount();
             menu.append(Component.literal(" "))
                     .append(createI18nButton("menu.tpatools.config.button.setmaxwarpcount_1",
-                            "menu.tpatools.config.hover.maxwarpcount",
+                            "menu.tpatools.config.hover.setmaxwarpcount",
                             "/tpatools configs setmaxwarpcount 1",
                             1 == maxWarpCount ? ChatFormatting.GREEN : ChatFormatting.GRAY,
                             true))
                     .append(Component.literal(" "))
                     .append(createI18nButton("menu.tpatools.config.button.setmaxwarpcount_2",
-                            "menu.tpatools.config.hover.maxwarpcount",
+                            "menu.tpatools.config.hover.setmaxwarpcount",
                             "/tpatools configs setmaxwarpcount 2",
                             2 == maxWarpCount ? ChatFormatting.GREEN : ChatFormatting.GRAY,
                             true))
                     .append(Component.literal(" "))
                     .append(createI18nButton("menu.tpatools.config.button.setmaxwarpcount_3",
-                            "menu.tpatools.config.hover.maxwarpcount",
+                            "menu.tpatools.config.hover.setmaxwarpcount",
                             "/tpatools configs setmaxwarpcount 3",
                             3 == maxWarpCount ? ChatFormatting.GREEN : ChatFormatting.GRAY,
                             true))
                     .append(Component.literal(" "))
                     .append(createI18nButton("menu.tpatools.config.button.setmaxwarpcount_4",
-                            "menu.tpatools.config.hover.maxwarpcount",
+                            "menu.tpatools.config.hover.setmaxwarpcount",
                             "/tpatools configs setmaxwarpcount 4",
                             4 == maxWarpCount ? ChatFormatting.GREEN : ChatFormatting.GRAY,
                             true))
                     .append(Component.literal(" "))
                     .append(createI18nButton("menu.tpatools.config.button.setmaxwarpcount_5",
-                            "menu.tpatools.config.hover.maxwarpcount",
+                            "menu.tpatools.config.hover.setmaxwarpcount",
                             "/tpatools configs setmaxwarpcount 5",
                             5 == maxWarpCount ? ChatFormatting.GREEN : ChatFormatting.GRAY,
                             true))
                     .append(Component.literal(" "))
                     .append(createI18nButton("menu.tpatools.config.button.setmaxwarpcount_custom",
-                            "menu.tpatools.config.hover.maxwarpcount",
+                            "menu.tpatools.config.hover.setmaxwarpcount",
                             "/tpatools configs setmaxwarpcount ",
                             ChatFormatting.GRAY,
                             false));
@@ -1622,7 +1673,17 @@ public class ModChatMenus {
             MutableComponent menu = Component.literal("");
 
             int teleportDelayTime = ModConfigs.getTeleportDelayTime();
-            menu.append(createI18nButton("menu.tpatools.config.button.teleportdelaytime_3",
+            menu.append(Component.literal("====== TPATools - setting/teleportdelaytime ======\n")
+                            .withStyle(ChatFormatting.GOLD))
+                    .append(ModUtils.translateWithFallback("menu.tpatools.config.tips.teleportdelaytime",
+                                    "This setting controls how many seconds players must stand still before the teleport happens.\n")
+                            .withStyle(ChatFormatting.WHITE))
+                    .append(ModUtils.translateWithFallback("menu.tpatools.config.default.teleportdelaytime",
+                                    "- Default: 3 (unit: seconds) (currently set to %d seconds)", teleportDelayTime)
+                            .withStyle(ChatFormatting.GRAY));
+
+            menu.append(Component.literal(" "))
+                    .append(createI18nButton("menu.tpatools.config.button.teleportdelaytime_3",
                             "menu.tpatools.config.hover.teleportdelaytime",
                             "/tpatools configs teleportdelaytime 3",
                             3 == teleportDelayTime ? ChatFormatting.GREEN : ChatFormatting.GRAY,
@@ -1637,8 +1698,13 @@ public class ModChatMenus {
                     .append(createI18nButton("menu.tpatools.config.button.teleportdelaytime_custom",
                             "menu.tpatools.config.hover.teleportdelaytime",
                             "/tpatools configs teleportdelaytime ",
-                            ChatFormatting.GRAY,
+                            ChatFormatting.AQUA,
                             false));
+
+            menu.append(Component.literal("\n=============================\n")
+                    .withStyle(ChatFormatting.GOLD));
+
+            player.sendSystemMessage(menu);
         }
     }
 
@@ -1679,7 +1745,7 @@ public class ModChatMenus {
         
         if (WarpHandler.warpPoints.isEmpty()) {
             player.sendSystemMessage(ModUtils.translateWithFallback(
-                    "command.tpatool.warp.no_warps", "No warp points available."));
+                    "command.tpatools.warp.no_warps", "No warp points available."));
             return;
         }
 

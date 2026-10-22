@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"id": "tpatools",
-	"version": "1.2.1+26.3",
+	"version": "1.2.2+mc26.3",
 	"name": "TPATools",
 	"description": "A mod that integrates the/tpa ,/home, and other command and functions for server.",
 	"authors": [

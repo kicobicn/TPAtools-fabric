@@ -34,7 +34,6 @@ public class ModConfigs {
     // ==================== 配置字段（可变 + 持久化） ====================
     private static final Gson CONFIG_GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    private static int cooldownSeconds = 60;
     private static int waitSeconds = 30;
     private static boolean debugMode = false;
     private static int maxHomes = 2;
@@ -54,7 +53,6 @@ public class ModConfigs {
     private static int rtpMaxY = 320;
     private static int maxWarpCount = 3;
     private static long cooldownTime = 3 * 1000L;
-    private static int timeoutTicks = 30 * 20;
     private static String defaultLanguage = "zh_cn";
     private static boolean safeTeleport = true;
     private static boolean teleportNeedTime = false;
@@ -79,7 +77,6 @@ public class ModConfigs {
     public static int getRtpMaxY() { return rtpMaxY; }
     public static int getMaxWarpCount() { return maxWarpCount; }
     public static long getCooldownTime() { return cooldownTime; }
-    public static int getTimeoutTicks() { return timeoutTicks; }
     public static String getDefaultLanguage() { return defaultLanguage; }
     public static boolean isDebugEnabled() { return debugMode; }
     public static boolean isSafeTeleport() { return safeTeleport; }
@@ -194,7 +191,6 @@ public class ModConfigs {
         try (Reader reader = Files.newBufferedReader(configFile)) {
             ConfigData data = CONFIG_GSON.fromJson(reader, ConfigData.class);
             if (data == null) return;
-            if (data.cooldownSeconds != null) cooldownSeconds = data.cooldownSeconds;
             if (data.waitSeconds != null) waitSeconds = data.waitSeconds;
             if (data.debugMode != null) debugMode = data.debugMode;
             if (data.maxHomes != null) maxHomes = data.maxHomes;
@@ -214,7 +210,6 @@ public class ModConfigs {
             if (data.rtpMaxY != null) rtpMaxY = data.rtpMaxY;
             if (data.maxWarpCount != null) maxWarpCount = data.maxWarpCount;
             if (data.cooldownTime != null) cooldownTime = data.cooldownTime;
-            if (data.timeoutTicks != null) timeoutTicks = data.timeoutTicks;
             if (data.safeTeleport != null) safeTeleport = data.safeTeleport;
             if (data.defaultLanguage != null) defaultLanguage = data.defaultLanguage;
             if (data.teleportNeedTime != null) teleportNeedTime = data.teleportNeedTime;
@@ -227,7 +222,6 @@ public class ModConfigs {
 
     public static void saveConfigValues() {
         ConfigData data = new ConfigData();
-        data.cooldownSeconds = cooldownSeconds;
         data.waitSeconds = waitSeconds;
         data.debugMode = debugMode;
         data.maxHomes = maxHomes;
@@ -247,7 +241,6 @@ public class ModConfigs {
         data.rtpMaxY = rtpMaxY;
         data.maxWarpCount = maxWarpCount;
         data.cooldownTime = cooldownTime;
-        data.timeoutTicks = timeoutTicks;
         data.safeTeleport = safeTeleport;
         data.defaultLanguage = defaultLanguage;
         data.teleportNeedTime = teleportNeedTime;
@@ -261,7 +254,6 @@ public class ModConfigs {
     }
 
     private static class ConfigData {
-        Integer cooldownSeconds;
         Integer waitSeconds;
         Boolean debugMode;
         Integer maxHomes;
@@ -281,7 +273,6 @@ public class ModConfigs {
         Integer rtpMaxY;
         Integer maxWarpCount;
         Long cooldownTime;
-        Integer timeoutTicks;
         Boolean safeTeleport;
         String defaultLanguage;
         Boolean teleportNeedTime;
@@ -354,14 +345,14 @@ public class ModConfigs {
                                                         setDefaultLanguage(lang);
                                                         ModUtils.loadTranslations(lang);
                                                         context.getSource().sendSuccess(
-                                                                () -> ModUtils.translateWithFallback("command.tpatool.setlanguage.success", "Language set to %s.", lang),
+                                                                () -> ModUtils.translateWithFallback("command.tpatools.setlanguage.success", "Language set to %s.", lang),
                                                                 true
                                                         );
                                                         DebugLog.info("Language switched to {} by {}", lang, context.getSource().getDisplayName().getString());
                                                         return 1;
                                                     }
                                                     context.getSource().sendFailure(
-                                                            ModUtils.translateWithFallback("command.tpatool.setlanguage.invalid", "Invalid language.")
+                                                            ModUtils.translateWithFallback("command.tpatools.setlanguage.invalid", "Invalid language.")
                                                     );
                                                     return 0;
                                                 })))
@@ -376,7 +367,7 @@ public class ModConfigs {
                                                     int count = IntegerArgumentType.getInteger(context, "count");
                                                     setMaxHomes(count);
                                                     context.getSource().sendSuccess(
-                                                            () -> ModUtils.translateWithFallback("command.tpatool.setmaxhome.success", "Maximum homes set to %s.", count),
+                                                            () -> ModUtils.translateWithFallback("command.tpatools.setmaxhome.success", "Maximum homes set to %s.", count),
                                                             true
                                                     );
                                                     DebugLog.info("Max homes set to {} by {}", count, context.getSource().getDisplayName().getString());
@@ -396,9 +387,9 @@ public class ModConfigs {
                                                             String command = StringArgumentType.getString(context, "command");
                                                             String enableStr = StringArgumentType.getString(context, "enable");
                                                             boolean enable = enableStr.equalsIgnoreCase("true");
-                                                            if (!Arrays.asList("tpa", "home", "grave", "back", "warp").contains(command)) {
+                                                            if (!Arrays.asList("tpa", "home", "grave", "back", "warp", "rtp").contains(command)) {
                                                                 context.getSource().sendFailure(
-                                                                        ModUtils.translateWithFallback("command.tpatool.needop.invalid_command", "Invalid command. Use 'tpa', 'home', 'grave', 'back', or 'warp'.")
+                                                                        ModUtils.translateWithFallback("command.tpatools.needop.invalid_command", "Invalid command. Use 'tpa', 'home', 'grave', 'back', 'warp', or 'rtp'.")
                                                                 );
                                                                 return 0;
                                                             }
@@ -406,7 +397,7 @@ public class ModConfigs {
                                                             TPAHandler.saveCommandPermissions();
                                                             context.getSource().sendSuccess(
                                                                     () -> ModUtils.translateWithFallback(
-                                                                            enable ? "command.tpatool.needop.success_enabled" : "command.tpatool.needop.success_disabled",
+                                                                            enable ? "command.tpatools.needop.success_enabled" : "command.tpatools.needop.success_disabled",
                                                                             enable ? "%s commands now require OP permission." : "%s commands now do not require OP permission.",
                                                                             command
                                                                     ),
@@ -428,7 +419,7 @@ public class ModConfigs {
                                                     setCooldownTime(time * 1000L);
                                                     context.getSource().sendSuccess(
                                                             () -> ModUtils.translateWithFallback(
-                                                                    "command.tpatool.tpacdtime.success",
+                                                                    "command.tpatools.tpacdtime.success",
                                                                     "TPA cooldown time set to %d seconds.",
                                                                     time
                                                             ),
@@ -451,7 +442,7 @@ public class ModConfigs {
                                                     setWaitSeconds(time);
                                                     context.getSource().sendSuccess(
                                                             () -> ModUtils.translateWithFallback(
-                                                                    "command.tpatool.tpawaittime.success",
+                                                                    "command.tpatools.tpawaittime.success",
                                                                     "TPA wait time set to %d seconds.",
                                                                     time
                                                             ),
@@ -475,7 +466,7 @@ public class ModConfigs {
                                                     setHomeInviteTimeout(time);
                                                     context.getSource().sendSuccess(
                                                             () -> ModUtils.translateWithFallback(
-                                                                    "command.tpatool.home.inviteovertime.success",
+                                                                    "command.tpatools.home.inviteovertime.success",
                                                                     "Home invite timeout time set to %d seconds.",
                                                                     time
                                                             ),
@@ -498,7 +489,7 @@ public class ModConfigs {
                                                     setHomeInviteCooldown(time);
                                                     context.getSource().sendSuccess(
                                                             () -> ModUtils.translateWithFallback(
-                                                                    "command.tpatool.home.invitecdtime.success",
+                                                                    "command.tpatools.home.invitecdtime.success",
                                                                     "Home invite cooldown time set to %d seconds.",
                                                                     time
                                                             ),
@@ -522,7 +513,7 @@ public class ModConfigs {
                                                     setAllowTeleportRideEntity(enable);
                                                     context.getSource().sendSuccess(
                                                             () -> ModUtils.translateWithFallback(
-                                                                    enable ? "command.tpatool.config.allowteleportrideentity.enabled" : "command.tpatool.config.allowteleportrideentity.disabled",
+                                                                    enable ? "command.tpatools.config.allowteleportrideentity.enabled" : "command.tpatools.config.allowteleportrideentity.disabled",
                                                                     enable ? "Ride entity teleport enabled." : "Ride entity teleport disabled."
                                                             ),
                                                             true
@@ -544,7 +535,7 @@ public class ModConfigs {
                                                     setSafeTeleport(enable);
                                                     context.getSource().sendSuccess(
                                                             () -> ModUtils.translateWithFallback(
-                                                                    enable ? "command.tpatool.config.safeteleport.enabled" : "command.tpatool.config.safeteleport.disabled",
+                                                                    enable ? "command.tpatools.config.safeteleport.enabled" : "command.tpatools.config.safeteleport.disabled",
                                                                     enable ? "Safe teleport enabled." : "Safe teleport disabled."
                                                             ),
                                                             true
@@ -565,7 +556,7 @@ public class ModConfigs {
                                                     setRtpCooldownTime(time);
                                                     context.getSource().sendSuccess(
                                                             () -> ModUtils.translateWithFallback(
-                                                                    "command.tpatool.config.rtp.cooldown.success",
+                                                                    "command.tpatools.config.rtp.cooldown.success",
                                                                     "RTP cooldown time set to %d seconds.",
                                                                     time
                                                             ),
@@ -589,7 +580,7 @@ public class ModConfigs {
                                                     setTeleportNeedTime(enable);
                                                     context.getSource().sendSuccess(
                                                             () -> ModUtils.translateWithFallback(
-                                                                    enable ? "command.tpatool.config.teleportneedtime.enabled" : "command.tpatool.config.teleportneedtime.disabled",
+                                                                    enable ? "command.tpatools.config.teleportneedtime.enabled" : "command.tpatools.config.teleportneedtime.disabled",
                                                                     enable ? "Teleport delay enabled. Players must stand still before teleporting." : "Teleport delay disabled. Players will teleport immediately."
                                                             ),
                                                             true
@@ -610,7 +601,7 @@ public class ModConfigs {
                                                     setTeleportDelayTime(time);
                                                     context.getSource().sendSuccess(
                                                             () -> ModUtils.translateWithFallback(
-                                                                    "command.tpatool.config.teleportdelaytime.success",
+                                                                    "command.tpatools.config.teleportdelaytime.success",
                                                                     "Teleport delay time set to %d seconds.",
                                                                     time
                                                             ),
@@ -633,7 +624,7 @@ public class ModConfigs {
                                                     setRtpScope(scope);
                                                     context.getSource().sendSuccess(
                                                             () -> ModUtils.translateWithFallback(
-                                                                    "command.tpatool.config.rtp.scope.success",
+                                                                    "command.tpatools.config.rtp.scope.success",
                                                                     "RTP scope set to %d blocks.",
                                                                     scope
                                                             ),
@@ -656,7 +647,7 @@ public class ModConfigs {
                                                     setMaxWarpCount(count);
                                                     context.getSource().sendSuccess(
                                                             () -> ModUtils.translateWithFallback(
-                                                                    "command.tpatool.config.maxwarpcount.success",
+                                                                    "command.tpatools.config.maxwarpcount.success",
                                                                     "Max warp count set to %d.",
                                                                     count
                                                             ),
@@ -682,7 +673,7 @@ public class ModConfigs {
                                         setDebugMode(enable);
                                         context.getSource().sendSuccess(
                                             () -> ModUtils.translateWithFallback(
-                                                    enable ? "command.tpatool.debug.enabled" : "command.tpatool.debug.disabled",
+                                                    enable ? "command.tpatools.debug.enabled" : "command.tpatools.debug.disabled",
                                                     enable ? "Debug mode enabled." : "Debug mode disabled."
                                             ),
                                             true

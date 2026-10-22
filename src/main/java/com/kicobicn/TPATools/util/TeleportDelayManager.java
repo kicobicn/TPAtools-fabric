@@ -88,7 +88,7 @@ public class TeleportDelayManager {
 
         if (pendingTeleports.containsKey(uuid)) {
             player.sendSystemMessage(ModUtils.translateWithFallback(
-                "command.tpatool.teleport_delay.already_pending",
+                "command.tpatools.teleport_delay.already_pending",
                 "You already have a pending teleport. Please wait or move to cancel."
             ));
             return;
@@ -99,7 +99,7 @@ public class TeleportDelayManager {
         pendingTeleports.put(uuid, pending);
 
         player.sendSystemMessage(ModUtils.translateWithFallback(
-            "command.tpatool.teleport_delay.started",
+            "command.tpatools.teleport_delay.started",
             "Teleporting in %d seconds. Don't move!",
             delay
         ));
@@ -109,27 +109,20 @@ public class TeleportDelayManager {
             player.getName().getString(), delay);
     }
 
-//    public static void cancelTeleport(ServerPlayer player) {
-//        UUID uuid = player.getUUID();
-//        PendingTeleport removed = pendingTeleports.remove(uuid);
-//
-//        if (removed != null) {
-//            player.displayClientMessage(Component.literal(""), true);
-//            player.sendSystemMessage(ModUtils.translateWithFallback(
-//                "command.tpatool.teleport_delay.cancelled",
-//                "Teleport cancelled!"
-//            ));
-//            ModConfigs.DebugLog.info("Player {} cancelled teleport",
-//                player.getName().getString());
-//        }
-//    }
-//    public static boolean hasPendingTeleport(ServerPlayer player) {
-//        return pendingTeleports.containsKey(player.getUUID());
-//    }
-//
-//    public static PendingTeleport getPendingTeleport(ServerPlayer player) {
-//        return pendingTeleports.get(player.getUUID());
-//    }
+    /** 外部主动清除某个玩家的待处理传送（例如玩家退出服务器） */
+    public static void clear(UUID uuid) {
+        if (pendingTeleports.remove(uuid) != null) {
+            ModConfigs.DebugLog.info("Cleared pending teleport for {}", uuid);
+        }
+    }
+
+    public static boolean hasPendingTeleport(ServerPlayer player) {
+        return pendingTeleports.containsKey(player.getUUID());
+    }
+
+    public static PendingTeleport getPendingTeleport(ServerPlayer player) {
+        return pendingTeleports.get(player.getUUID());
+    }
 
     public static void tick() {
         if (!ModConfigs.isTeleportNeedTime()) return;
@@ -160,7 +153,7 @@ public class TeleportDelayManager {
             if (pending.hasMoved()) {
                 player.sendSystemMessage(Component.literal(""), true);
                 player.sendSystemMessage(ModUtils.translateWithFallback(
-                    "command.tpatool.teleport_delay.moved",
+                    "command.tpatools.teleport_delay.moved",
                     "You moved! Teleport cancelled."
                 ).withStyle(ChatFormatting.RED));
                 cancelled.add(entry.getKey());
@@ -170,7 +163,7 @@ public class TeleportDelayManager {
             if (pending.isHurt()) {
                 player.sendSystemMessage(Component.literal(""), true);
                 player.sendSystemMessage(ModUtils.translateWithFallback(
-                    "command.tpatool.teleport_delay.hurt",
+                    "command.tpatools.teleport_delay.hurt",
                     "You took damage! Teleport cancelled."
                 ).withStyle(ChatFormatting.RED));
                 cancelled.add(entry.getKey());
@@ -221,7 +214,8 @@ public class TeleportDelayManager {
             .append(Component.literal(progressBar).withStyle(ChatFormatting.GREEN))
             .append(Component.literal(" "))
             .append(ModUtils.translateWithFallback(
-                    "command.tpatool.teleport_delay.instruction", "About to be transmitted. Please do not move"
+                    "command.tpatools.teleport_delay.instruction", "About to be transmitted. Please do not move",
+                    remaining
             )).withStyle(ChatFormatting.RED);
 
         pending.player.sendSystemMessage(hudMessage, true);
@@ -313,7 +307,7 @@ public class TeleportDelayManager {
 
     private static void showTeleportSuccess(ServerPlayer player) {
         Component successMsg = Component.literal("")
-            .append(ModUtils.translateWithFallback("command.tpatool.teleport_delay.success", "Teleportation successful")).withStyle(ChatFormatting.GREEN, ChatFormatting.BOLD);
+            .append(ModUtils.translateWithFallback("command.tpatools.teleport_delay.success", "Teleportation successful")).withStyle(ChatFormatting.GREEN, ChatFormatting.BOLD);
         player.sendSystemMessage(successMsg, true);
     }
 }

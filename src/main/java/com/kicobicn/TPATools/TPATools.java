@@ -5,12 +5,13 @@ import com.kicobicn.TPATools.chat.ChatHandler;
 import com.kicobicn.TPATools.config.ModConfigs;
 import com.kicobicn.TPATools.database.DatabaseManager;
 import com.kicobicn.TPATools.util.ModUtils;
+import com.kicobicn.TPATools.util.TeleportDelayManager;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,12 +27,22 @@ public class TPATools implements ModInitializer {
         // 注册服务器事件
         ServerLifecycleEvents.SERVER_STARTING.register(this::onServerStarting);
         ServerLifecycleEvents.SERVER_STOPPING.register(this::onServerStopping);
-        ServerTickEvents.END_SERVER_TICK.register(this::onServerTick);
+        // 注意：数据库连接必须在所有 save*() 之后才能关闭，因此放到 SERVER_STOPPED
+        ServerLifecycleEvents.SERVER_STOPPED.register(server -> DatabaseManager.close());
 
         // 注册连接事件
-        ServerPlayConnectionEvents.JOIN.register((handler, server, client) -> {
-            // 玩家加入事件，可以用来初始化玩家状态
-            ModConfigs.DebugLog.info("Player {} joined the server", handler.getPlayer().getName().getString());
+        ServerPlayConnectionEvents.JOIN.register((handler, server, client) ->
+                ModConfigs.DebugLog.info("Player {} joined the server",
+                        handler.getPlayer().getName().getString()));
+
+        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
+            ServerPlayer player = handler.getPlayer();
+            if (player == null) {
+                return;
+            }
+            // 玩家退出时清理待处理传送与 TPA 请求，避免持有已下线玩家
+            TeleportDelayManager.clear(player.getUUID());
+            TPAHandler.onPlayerDisconnect(player);
         });
 
         // 注册命令
@@ -66,11 +77,8 @@ public class TPATools implements ModInitializer {
 
     private void onServerStopping(MinecraftServer server) {
         LOGGER.info("TPATools mod: Server stopping...");
-        DatabaseManager.close();
+        // 玩家数据由 ModUtils 注册的 SERVER_STOPPING 监听器保存；
+        // 数据库连接在 SERVER_STOPPED 关闭。
         ModConfigs.saveConfigValues();
-    }
-
-    private void onServerTick(MinecraftServer server) {
-        //暂不进行处理
     }
 }
